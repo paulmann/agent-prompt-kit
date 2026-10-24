@@ -25,7 +25,8 @@ must verify and its own definition of done, and works inside that contract.
 
 - [What it is](#what-it-is)
 - [In numbers](#in-numbers)
-- [Quick start](#quick-start)
+- [Installation](#installation)
+- [Usage](#usage)
 - [The thirteen modules](#the-thirteen-modules)
 - [The quality gate](#the-quality-gate)
 - [Portability](#portability)
@@ -71,7 +72,7 @@ Measured in this tree on 2026-10-24:
 | Worked examples | 3 | `examples/EXAMPLES.md` |
 | Runtime dependencies | 0 | imports in `tools/` |
 
-## Quick start
+## Installation
 
 ```bash
 git clone https://github.com/paulmann/agent-prompt-kit.git
@@ -80,15 +81,17 @@ cd agent-prompt-kit
 python tools/prompt_lint.py            # exit 0 means the document is structurally complete
 ```
 
-Use the prompt:
+Only Python 3.11+ is required. No packages, no service, no account.
+
+## Usage
 
 1. Open `PROMPT.md`.
 2. Paste everything below the YAML header into your agent's system prompt field.
 3. Give the agent a real request. It must answer with a Task Card, a Domain Card, the deliverable,
    the evidence labels and a gate line.
 
-Nothing else is required: no packages, no service, no account. The prompt is deliberately
-tool-agnostic — see [Portability](#portability).
+The prompt is deliberately tool-agnostic — see [Portability](#portability). A worked answer, in three
+unrelated domains, is in [`examples/EXAMPLES.md`](examples/EXAMPLES.md).
 
 ## The thirteen modules
 

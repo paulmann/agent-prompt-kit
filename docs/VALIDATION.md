@@ -68,18 +68,31 @@ otherwise would be failure mode 11 from the prompt itself.
 |---|---|
 | Prompt design, module contract, lint | this session, with the GitHub Wiki Writer pack as the toolchain |
 | Repository structure, documentation, assets | published with the pack's `ghagent` commands (`assets render`, `doc`, `audit`, `wiki build`) |
-| Independent review against these contracts | the Saved Agent "GitHub Wiki Writer", read-only profile: it inspected the tree and reported findings |
+| Independent review against these contracts | `tools/external_check.py` — it fetches the published bytes and recomputes anchors, sections, changelog types, module order and image headers without reading the local tree |
 | Publication | `gh` under the owner's identity; commits signed as the owner |
+
+### Delegation attempt, and why it is recorded here
+
+The plan was to have the Saved Agent "GitHub Wiki Writer" perform the independent review. It was
+invoked twice with a narrow, web-only brief and both runs failed at execution
+(`subagent_execution_failed`), before producing any finding. That is recorded rather than hidden for
+three reasons: the review still happened and had to be attributed correctly; a claim of agent review
+that did not occur would be failure mode 11 (authority theatre) from the prompt itself; and the next
+person should know the delegation route is currently broken for that agent rather than rediscover it.
+
+The substitute check is weaker in one respect — it verifies structure and published bytes, not
+judgement — and stronger in another: it reads exactly what a consumer of the repository reads.
 
 ## How to re-run the validation
 
 ```bash
-python tools/prompt_lint.py                     # structural contracts
+python tools/prompt_lint.py                     # structural contracts, local tree
 python tools/prompt_lint.py --json | head -40   # the findings, machine-readable
+python tools/external_check.py                  # the same contracts over the published bytes
 ```
 
-Expected on the published tree: exit `0` and `PASS: 0 error(s)`, with a non-empty warnings list only
-if a workflow file is missing.
+Expected on the published tree: both exit `0`. The external check also recomputes heading anchors and
+reads the PNG header, so a fresh clone is not trusted to be what GitHub serves.
 
 ## Open items for the owner
 

@@ -43,6 +43,17 @@ When you operate *under* this prompt, these hold:
 | Answer in five sections, in the user's language | M7 |
 | Report the ten-item gate as one line | M8 |
 
+## Traps when using this kit
+
+| Trap | Symptom | Action |
+|---|---|---|
+| Editing the prompt to add a domain | the file grows by a page per project | fill a Domain Card instead (M2, M10) |
+| Naming a tool in the prompt | the prompt stops working in another runtime | use a capability class (M6) |
+| Reporting a gate line without running the gate | the answer looks auditable and is not | run M8, then print the line |
+| Translating a module loosely | the two versions state different rules | translate in the same commit, same module set |
+| Renumbering modules | every reference in docs and reviews breaks | keep `M0`…`M12` stable |
+| Treating the linter as a quality proof | it checks structure, not judgement | use `docs/QA.md` for the content |
+
 ## Do not
 
 - Add a domain to the prompt itself. Domains belong in a Domain Card and in `examples/`.
