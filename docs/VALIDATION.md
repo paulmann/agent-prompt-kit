@@ -28,7 +28,7 @@ It is the answer to "did you build what was asked" that does not depend on the a
 | 7 | Context ingestion rules | M3 | priority order, ledger schema, six rules | verified by the lint's module check |
 | 8 | Tool-usage and safety rules | M6 | seven non-negotiable rules | verified by the lint's module check |
 | 9 | Output format requirements | M7 | five sections plus six rules | verified by the lint's module check |
-| 10 | Quality-assurance checklist | M8 plus `docs/QA.md` | eleven tests, reported as one line; the same eleven as a human checklist | verified: 11 tests in both places |
+| 10 | Quality-assurance checklist | M8 plus `docs/QA.md` | twelve tests, reported as one line; the same twelve as a human checklist | verified: 12 tests in both places |
 | 11 | Usage examples | `examples/EXAMPLES.md` | three domains: routine, ambiguous, failure | verified: 3 examples, 3 gate lines |
 | 12 | English canonical, Russian supplementary | every `.md` has a `.ru.md` twin | `tools/prompt_lint.py`, rule `pairs.missing-translation` | verified mechanically |
 | 13 | No invented context | M3 rule 1, M4 labels, M9 mode 2 | the lint cannot check truth, but the prompt forbids unsourced claims and the examples label every claim | prompt-enforced, human-reviewed |
@@ -53,6 +53,23 @@ sixteen rows — cost per repeat, not completeness of a document.
 | 23 | The new module does not become a second source of truth | M3 priority 5.5, M3 rule 7, invariant 9 | experience ranks below the repository by rule, and the gate checks that reuse is named rather than assumed | verified by construction |
 | 24 | Both languages stay in step | every new file has a `.ru.md` twin; the linter enforces pairing and M13 markers per language | `python tools/prompt_lint.py` | verified mechanically |
 
+## Third phase: from a session to a specialist environment
+
+The second request was to make the kit create **specialist agents from work already done**, and to fix
+documentation that led an agent to read the kit as "paste this prompt into the current session". The
+measurement that mattered: the word *workspace* did not appear anywhere in the repository, and neither
+did the idea of analysing related sessions.
+
+| # | Requirement | Where it is satisfied | How it is checked | Status |
+|---:|---|---|---|---|
+| 25 | The kit's purpose is stated as producing a working environment | `PROMPT.md` M0 output table; `SKILL.md` §0; README summary | all three state two outputs (answer, environment) and call the persona a side mode | verified by reading; linter requires `SKILL.md` + `docs/INSTALL.md` |
+| 26 | Specialization is a procedure with five steps | M10 table: material, cards, environment, registration, handoff | each step has a falsifiable test column | verified by construction |
+| 27 | Related sessions are a first-class source | M3 source 6, M3 rules 8–9, capability `session-search` | the index schema and the noise filter are documented from measurement | verified: 232 sessions / 106 663 docs / 3 193 user messages |
+| 28 | The registration step is named per runtime and never faked | M10 runtime table, M6 rule 9, gate 12, `tools/install.py` | HARNESS prints the click and still reports READY-with-a-caveat; AutoClaw2 reports NOT READY until the manifest contains the entry | verified: manifest checked, 39 skills / 5 prompts at the time of writing |
+| 29 | Installation cannot repeat the errors we hit | `docs/INSTALL.md` per runtime plus a traps table | every trap row corresponds to a symptom observed in this or a reported session | verified by construction; SagaAI explicitly unverified |
+| 30 | One installer, honest dry run | `tools/install.py --check/--write` | `--check` writes nothing; replaced files get a backup; exit codes distinguish usage from findings | verified: `--check` on a clean tree, `--saga` refuses to guess |
+
+
 ## What is verified, and what is assumed
 
 Being explicit here matters more than a clean table.
@@ -61,7 +78,7 @@ Being explicit here matters more than a clean table.
 
 - module sequence `M0`…`M13` present, in order, once each;
 - 14 `**Check:**` lines, one per module;
-- 9 invariants, numbered;
+- 10 invariants, numbered;
 - every Markdown file has a Russian twin, and every twin has an English original;
 - no `{{placeholder}}` outside a code fence, no secret-shaped literal, no absolute machine path;
 - no dangling `M<number>` reference in any document;

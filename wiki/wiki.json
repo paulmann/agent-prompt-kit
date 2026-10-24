@@ -5,9 +5,29 @@
   "title": "agent-prompt-kit",
   "footer": "MIT",
   "groups": [
-    {"title": "Start", "pages": ["Home.md", "01-Usage.md", "02-Modules.md"]},
-    {"title": "Русский", "pages": ["Home.ru.md", "01-Usage.ru.md", "02-Modules.ru.md"],
-     "labels": {"Home.ru.md": "Home (RU)", "01-Usage.ru.md": "01 · Использование",
-                "02-Modules.ru.md": "02 · Модули"}}
+    {
+      "title": "Start",
+      "pages": [
+        "Home.md",
+        "01-Usage.md",
+        "02-Modules.md",
+        "03-Install.md"
+      ]
+    },
+    {
+      "title": "Русский",
+      "pages": [
+        "Home.ru.md",
+        "01-Usage.ru.md",
+        "02-Modules.ru.md",
+        "03-Install.ru.md"
+      ],
+      "labels": {
+        "Home.ru.md": "Home (RU)",
+        "01-Usage.ru.md": "01 · Использование",
+        "02-Modules.ru.md": "02 · Модули",
+        "03-Install.ru.md": "03 · Установка"
+      }
+    }
   ]
 }

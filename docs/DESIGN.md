@@ -67,11 +67,11 @@ Plans are cheap; unrecorded changes are expensive. Requiring the agent to state 
 and how to undo it turns every step into an auditable unit and makes rollback a first-class outcome
 rather than an afterthought.
 
-## Why the gate is ten items and not forty
+## Why the gate is twelve items and not forty
 
-A gate longer than eleven items is not run. Eleven is what still fits on one screen and can be reported as a
-single line (`gate 11/11`). The two items that fail most often — evidence coverage and verification —
-are the reason the other eight are not enough on their own.
+A gate longer than twelve items is not run. Twelve is what still fits on one screen and can be reported as a
+single line (`gate 12/12`). The two items that fail most often — evidence coverage and verification —
+are the reason the other ten are not enough on their own.
 
 ## Why the failure-mode table exists
 
@@ -117,11 +117,36 @@ by a machine, and reuse must be justified by six questions.**
 | One store, one schema | per-agent notes | two stores means two truths, one of them stale |
 | Experience ranks below the repository | experience as first-class evidence | a stale recipe applied confidently is the most expensive failure in the set |
 
-## Why the gate grew to eleven
+## Why the deliverable is an environment, not a persona
+
+The first version of this kit said "work as a senior specialist for the rest of the session". That
+sentence is true and nearly useless: it changes how the agent talks, not what survives the window.
+The measured consequence: a finished piece of work left nothing behind, so the next round of the same
+class started from zero in a fresh session with an agent that knew nothing about it.
+
+Version 1.2.0 moves the output. Specialization now produces an artefact — a registered workspace or a
+saved agent — with five parts: rules, a domain card carrying a testable acceptance criterion, worked
+examples including a failure, a store of prior work, and a handoff prompt. The persona is a side mode,
+and the prompt says so explicitly (M10, failure mode 18).
+
+The gate gained its twelfth item for the same reason. Items 1–11 check the answer; item 12 checks
+whether the answer was *delivered*: a directory at a named path, a registration step stated truthfully,
+a starting prompt included. Item 12 exists because the failure we produced ourselves was a perfect
+workspace nobody had registered.
+
+| Decision | Alternative rejected | Why |
+|---|---|---|
+| the artefact is a directory the runtime registers | "the agent remembers being a specialist" | the registry is the only thing the next session can see |
+| the registration step is named, never assumed | "created — done!" | runtimes differ, and a human click is often unavoidable |
+| the handoff prompt is a required output | "now go and work" | the next window has no memory of this one |
+| sessions are read through the runtime's index | "analyse your own context only" | the same class of work usually left traces in other sessions |
+
+## Why the gate grew to twelve
 
 Ten tests checked the answer. The eleventh checks the *provenance* of the answer — whether prior work
-was retrieved and judged. That is a different question from "is this correct", and it is the one that
-silently disappears when a solution arrives pre-formatted.
+was retrieved and judged. The twelfth checks *delivery* — whether the reusable environment exists at a
+named path and its registration step is stated. Both questions are different from "is this correct",
+and both are the ones that vanish when an answer looks finished.
 
 ## What this design does not solve
 

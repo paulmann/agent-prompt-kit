@@ -163,13 +163,13 @@ checks = len(re.findall(r"^\*\*Check:\*\*", prompt, flags=re.MULTILINE))
 if checks != 14:
     add("prompt.check", "PROMPT.md", f"{checks} check lines", "one per module")
 block = prompt.split("## Invariants", 1)[1] if "## Invariants" in prompt else ""
-if len(re.findall(r"^\d+\. ", block, flags=re.MULTILINE)) != 9:
-    add("prompt.invariants", "PROMPT.md", "invariants are not nine", "keep nine")
+if len(re.findall(r"^\d+\. ", block, flags=re.MULTILINE)) != 10:
+    add("prompt.invariants", "PROMPT.md", "invariants are not ten", "keep ten")
 gate = re.search(r"## M8 .*?(?=\n## )", prompt, flags=re.DOTALL)
 if gate:
     rows = len(re.findall(r"^\| \d+ \| ", gate.group(0), flags=re.MULTILINE))
-    if rows != 11:
-        add("prompt.gate", "PROMPT.md", f"the gate lists {rows} items", "keep eleven")
+    if rows != 12:
+        add("prompt.gate", "PROMPT.md", f"the gate lists {rows} items", "keep twelve")
 for marker in ("## M13 — ", "Experience Store", "applicability", "last_verified_at"):
     if marker not in prompt:
         add("prompt.experience", "PROMPT.md", f"M13 marker missing: {marker}", "complete M13")

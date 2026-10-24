@@ -1,28 +1,39 @@
 # agent-prompt-kit
 
-**A portable system prompt that turns any AI agent into a topic specialist at runtime: it derives the subject and skill set from the conversation, retrieves prior work instead of redoing it, labels every claim, and gates its own output. Fourteen numbered modules, machine-checked.**
+**Turn work you have already done into a specialist environment for the work coming next. One command reads the current session and the runtime's related sessions, writes a Task Card and a Domain Card, and creates a workspace or saved agent that already holds the rules, the acceptance criterion, worked examples and a store of prior work. Fourteen modules, machine-checked.**
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Modules](https://img.shields.io/badge/modules-14-6f42c1)](PROMPT.md)
 [![Lint](https://img.shields.io/badge/lint-prompt__lint.py-informational)](tools/prompt_lint.py)
 [![Experience](https://img.shields.io/badge/experience-reuse-0f766e)](skills/experience-reuse/SKILL.md)
-[![Tests](https://img.shields.io/badge/contracts-31%20checks-brightgreen)](tools/prompt_lint.py)
+[![Rules](https://img.shields.io/badge/lint%20rules-27-brightgreen)](tools/prompt_lint.py)
 [![Русская версия](https://img.shields.io/badge/lang-EN%20%2F%20RU-0ea5e9)](README.ru.md)
 
 <img src="https://github.com/paulmann/agent-prompt-kit/raw/main/assets/social-preview.png"
      alt="agent-prompt-kit — a portable system prompt that makes an agent a topic specialist"
      width="100%">
 
-Most agent prompts fail in one of two ways: they are so generic that the agent answers everything
-shallowly, or so domain-bound that they cannot be reused. This kit takes a third route — the agent
-is generic until it reads the request, then it writes down the subject, the skill set, the facts it
-must verify and its own definition of done, and works inside that contract.
+A good answer dies with the chat. The next time the same class of work arrives, a fresh session
+starts from zero: the same discovery, the same dead ends, the same questions. This kit makes that
+repetition cheap — not by remembering harder, but by leaving a **registered working environment**
+behind.
 
-A second cost is repetition: the same migration, release or documentation pass is re-derived because
-nothing reminds the agent it was done before. M13 fixes that with a store of prior work and a single
-command to retrieve it, so a repeated task costs one search instead of a re-run of the discovery.
+One command, one result: a directory — a workspace, or a saved agent — that already holds the rules
+for that class of work, a domain card with a testable acceptance criterion, worked examples including
+one failure, a store of prior work, and a starting prompt for the next window.
 
-> **Status.** Every number here was measured on 2026-10-24 against version 1.0.0 with
+| What the command does | Why it matters |
+|---|---|
+| reads the current session **and the runtime's related sessions** | the material is the real work, not a description of it |
+| writes Task Card + Domain Card before acting | the subject is declared instead of assumed |
+| creates the environment directory with every part in place | the next round starts from the eleventh step, not the first |
+| names the registration step, per runtime | HARNESS: one click; AutoClaw2: a reload; pretending otherwise is the bug |
+| hands over a starting prompt | a directory with no handoff is a museum, not a workplace |
+
+Every runtime claim in this repository is marked as measured here or reported from a session — see
+[`docs/INSTALL.md`](docs/INSTALL.md).
+
+> **Status.** Every number here was measured on 2026-10-24 against version 1.2.0 with
 > `python tools/prompt_lint.py`. Long guides live in [`docs/`](docs/) and the
 > [Wiki](https://github.com/paulmann/agent-prompt-kit/wiki).
 
@@ -31,6 +42,7 @@ command to retrieve it, so a repeated task costs one search instead of a re-run 
 - [What it is](#what-it-is)
 - [In numbers](#in-numbers)
 - [Installation](#installation)
+- [Runtimes](#runtimes)
 - [Usage](#usage)
 - [The fourteen modules](#the-fourteen-modules)
 - [Experience reuse](#experience-reuse)
@@ -48,7 +60,7 @@ One file, `PROMPT.md`, plus the material needed to trust and adapt it.
 
 | Piece | What it gives you |
 |---|---|
-| [`PROMPT.md`](PROMPT.md) | the system prompt: 14 modules, 14 self-checks, 9 invariants |
+| [`PROMPT.md`](PROMPT.md) | the system prompt: 14 modules, 14 self-checks, 10 invariants |
 | [`AGENTS.md`](AGENTS.md) | the same contract in machine-facing form, for coding agents that read repository rules |
 | [`skills/experience-reuse/`](skills/experience-reuse/SKILL.md) | the M13 skill: workflow, applicability checklist, four record templates, a security policy |
 | [`tools/experience.py`](tools/experience.py) | the experience store and its one-command retrieval, with schema and secret checks |
@@ -78,9 +90,9 @@ Measured in this tree on 2026-10-24:
 |---|---:|---|
 | Modules in the prompt | 14 | `PROMPT.md`, headings `M0`…`M13` |
 | Self-check lines | 14 | `grep -c '^\*\*Check:\*\*' PROMPT.md` |
-| Invariants | 9 | `PROMPT.md`, section "Invariants" |
-| Quality-gate tests | 11 | `PROMPT.md`, section M8 |
-| Contract checks in the linter | 31 | `python tools/prompt_lint.py --json` |
+| Invariants | 10 | `PROMPT.md`, section "Invariants" |
+| Quality-gate tests | 12 | `PROMPT.md`, section M8 |
+| Distinct rule ids in the linter | 27 | `grep -o 'add("[a-z]*", "[a-z.-]*"' tools/prompt_lint.py \| sort -u` |
 | Experience self-tests | 13 | `python tools/experience.py selftest` |
 | Worked examples | 3 + 3 sanitised records | `examples/`, `skills/experience-reuse/examples/` |
 | Runtime dependencies | 0 | imports in `tools/` |
@@ -95,6 +107,28 @@ python tools/prompt_lint.py            # exit 0 means the document is structural
 ```
 
 Only Python 3.11+ is required. No packages, no service, no account.
+
+## Runtimes
+
+The same procedure, three different mechanisms. What a model can do and what a human must do are
+different per runtime, and this table says which is which — measured on this machine, or marked as
+reported from a session.
+
+| Runtime | The command | The model does | The human does | Verified |
+|---|---|---|---|---|
+| **AutoClaw2** | `/agent-prompt-kit` (also `/skill:agent-prompt-kit`) | writes the skill into `%USERPROFILE%\.pi\agent\skills\` and the command into `...\prompts\` | reloads so the resource snapshot is rebuilt | measured in the app bundle |
+| **HARNESS** | `/agent-prompt-kit` | creates the whole workspace directory with every file | one click: add the directory as a workspace | mechanism measured here; the click reported |
+| **SagaAI** | — | paste `PROMPT.md` as the operating contract | as the runtime requires | **not verified**: the installer refuses to guess |
+
+```bash
+python tools/install.py --runtime autoclaw2 --check    # files plus registration state
+python tools/install.py --runtime autoClaw2 --write    # install, backup anything it replaces
+python tools/install.py --runtime harness  --write
+```
+
+The installer never reports a manual step as done. In HARNESS it prints the click; in AutoClaw2 it
+checks the resource manifest and says `NOT READY` until the reload happened. Full mechanics and the
+trap table: [`docs/INSTALL.md`](docs/INSTALL.md).
 
 ## Usage
 
@@ -118,7 +152,7 @@ unrelated domains, is in [`examples/EXAMPLES.md`](examples/EXAMPLES.md).
 | M5 | How do I work without breaking things? | loop: frame → retrieve → plan → act → verify → record |
 | M6 | What may I use, and what is forbidden? | capability table, safety rules |
 | M7 | What shape does the answer have? | five sections plus an optional reused-experience section |
-| M8 | How do I know it is finished? | eleven-item gate, reported as a line |
+| M8 | How do I know it is finished? | twelve-item gate, reported as a line |
 | M9 | How is this prompt defeated? | sixteen failure modes with counters |
 | M10 | How do I point it at a new domain? | one card, one examples file, one acceptance line |
 | M11 | What does a good answer look like? | three worked examples |
@@ -150,14 +184,14 @@ records are deprecated with a pointer to the replacement.
 
 ## The quality gate
 
-The agent must print one line, for example `gate 11/11` or `gate 9/11 — 6, 9 failed: <reason>`.
-The eleven tests are defined in M8; the two that fail most often in practice are:
+The agent must print one line, for example `gate 12/12` or `gate 10/12 — 6, 9 failed: <reason>`.
+The twelve tests are defined in M8; the two that fail most often in practice are:
 
 - **#4 evidence coverage** — a factual claim that never entered the Context Ledger;
 - **#6 verification** — "it works" without a command or an observation.
 
 A gate line is not decoration: it is what makes an answer auditable by someone who did not watch
-the agent work. `docs/QA.md` turns the same eleven tests into a human review checklist.
+the agent work. `docs/QA.md` turns the same twelve tests into a human review checklist.
 
 ## Portability
 

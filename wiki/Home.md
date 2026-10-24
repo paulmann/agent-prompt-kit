@@ -10,9 +10,14 @@ claim, and gates its own output before sending.
 |---|---|---|
 | 1 | [Usage](01-Usage) | load the prompt, run the lint, see what a correct answer looks like |
 | 2 | [Module map](02-Modules) | the fourteen modules and what each one verifies |
+| 3 | [Install](03-Install) | AutoClaw2, HARNESS, SagaAI: what the model does and what a human must do |
 | 3 | [Experience store](https://github.com/paulmann/agent-prompt-kit/tree/main/memory) | where prior work lives, and the one command that retrieves it |
 
 ## The two cards
+
+The kit has two outputs: an answer, and — when the class of work repeats — a **registered working
+environment** with rules, a domain card, worked examples and a store of prior work. The second one is
+the point: it is what the next session can actually see.
 
 Everything begins with two written outputs, not with enthusiasm:
 

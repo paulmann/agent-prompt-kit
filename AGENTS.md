@@ -9,10 +9,11 @@ used in reviews, in `docs/` and in `tools/prompt_lint.py`.
 ## Verification
 
 ```bash
-python tools/prompt_lint.py          # exit 0 = structural contracts hold
-python tools/prompt_lint.py --json   # machine-readable findings
-python tools/experience.py selftest  # the experience store rejects what it claims to reject
-python tools/experience.py check     # schema, secrets, duplicates, staleness
+python tools/prompt_lint.py            # exit 0 = structural contracts hold
+python tools/prompt_lint.py --json     # machine-readable findings
+python tools/experience.py selftest    # the store rejects what it claims to reject
+python tools/experience.py check       # schema, secrets, duplicates, staleness
+python tools/install.py --runtime autoclaw2 --check   # installed files and registration
 ```
 
 The linter fails on: a missing module, a module out of order, a missing `**Check:**` line, a
@@ -46,7 +47,7 @@ When you operate *under* this prompt, these hold:
 | Smallest verifiable step, verify after acting | M5 |
 | Sandbox irreversible actions; never print secrets | M6 |
 | Answer in five sections, in the user's language | M7 |
-| Report the eleven-item gate as one line | M8 |
+| Report the twelve-item gate as one line | M8 |
 | Search the store before planning; record after verifying | M13 |
 
 ## Traps when using this kit
@@ -56,6 +57,8 @@ When you operate *under* this prompt, these hold:
 | Editing the prompt to add a domain | the file grows by a page per project | fill a Domain Card instead (M2, M10) |
 | Naming a tool in the prompt | the prompt stops working in another runtime | use a capability class (M6) |
 | Treating retrieved experience as truth | an old recipe applied to a changed environment | run the six-question applicability check (M13) |
+| Reporting a workspace or skill as installed without registration | files exist, the next session sees nothing | gate 12: name the registration step or the id |
+| Describing specialization as a session persona | the user asked for a working environment and got a tone change | M10: the deliverable is a directory plus a handoff |
 | Recording every task | the store becomes noise and retrieval stops finding anything | record only reusable, general, verified work |
 | Deleting an outdated record | the audit trail vanishes and the wrong approach returns | deprecate with `superseded_by` |
 | Reporting a gate line without running the gate | the answer looks auditable and is not | run M8, then print the line |

@@ -21,8 +21,8 @@ from pathlib import Path
 EXIT_OK, EXIT_FAIL, EXIT_USAGE = 0, 1, 2
 MODULE_IDS = [f"M{n}" for n in range(0, 14)]
 REQUIRED_FRONT_MATTER = ("id", "version", "title", "language", "portable", "requires")
-INVARIANT_COUNT = 9
-GATE_ITEMS = 11
+INVARIANT_COUNT = 10
+GATE_ITEMS = 12
 EXPERIENCE_MARKERS = {
     "PROMPT.md": ("## M13 — ", "Experience Store", "applicability", "last_verified_at"),
     "PROMPT.ru.md": ("## M13 — ", "хранилище опыта", "применимост", "last_verified_at"),
@@ -142,6 +142,9 @@ def check_experience_module(root: Path) -> None:
         return
     if not (root / "memory" / "README.md").exists():
         add("error", "experience.store", "memory/README.md is absent; the store has no documented home")
+    for pair in ("SKILL.md", "SKILL.ru.md", "docs/INSTALL.md", "docs/INSTALL.ru.md"):
+        if not (root / pair).exists():
+            add("error", "skill.entry", f"{pair} is absent; users install the kit through it")
     skill = root / "skills" / "experience-reuse" / "SKILL.md"
     if not skill.exists():
         add("error", "experience.skill", "skills/experience-reuse/SKILL.md is absent")

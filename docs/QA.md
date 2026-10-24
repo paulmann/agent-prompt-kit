@@ -1,6 +1,6 @@
 # QA checklist
 
-The eleven tests of M8 turned into a review procedure for a human. Use it on an answer the agent
+The twelve tests of M8 turned into a review procedure for a human. Use it on an answer the agent
 produced, or on the prompt itself before publishing a change.
 
 ## Reviewing one answer
@@ -43,7 +43,7 @@ python tools/prompt_lint.py          # must exit 0
 | Check | Why |
 |---|---|
 | Module identifiers unchanged | they are an interface for reviews and tooling |
-| M13 stays whole: store, tool, skill, eleven gate rows | a half-implemented module reads as complete and is not |
+| M13 stays whole: store, tool, skill, twelve gate rows | a half-implemented module reads as complete and is not |
 | `**Check:**` line present for every module | a module without a check cannot be verified |
 | Russian twin updated in the same commit | a stale translation is a documentation defect |
 | `version` bumped and changelog entry added | the linter compares them; a mismatch fails the build |
