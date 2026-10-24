@@ -1,0 +1,8 @@
+# work directories and reports
+.ghagent/
+lint.json
+AUDIT.md
+__pycache__/
+*.pyc
+.vscode/
+.idea/

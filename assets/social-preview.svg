@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-label="agent-prompt-kit">
+  <rect width="1280" height="640" fill="#0d1117"/>
+  <rect x="0" y="0" width="1280" height="6" fill="#58a6ff"/>
+  <rect x="72" y="72" width="1136" height="496" rx="18" fill="#161b22" stroke="#30363d"/>
+  <text x="120" y="168" fill="#e6edf3" font-size="64" font-weight="700" font-family="Segoe UI, Helvetica, Arial, sans-serif">agent-prompt-kit</text>
+  <text x="120" y="253" fill="#8b949e" font-size="26" font-family="Segoe UI, Helvetica, Arial, sans-serif">A portable system prompt that makes any agent a topic</text>
+  <text x="120" y="289" fill="#8b949e" font-size="26" font-family="Segoe UI, Helvetica, Arial, sans-serif">specialist: cards, ledger, labels, gate.</text>
+  <rect x="120" y="440" width="1040" height="56" rx="10" fill="#0d1117" stroke="#30363d"/>
+  <text x="144" y="476" fill="#3fb950" font-size="22" font-family="Consolas, Menlo, monospace">python tools/prompt_lint.py</text>
+  <rect x="120" y="512" width="86" height="32" rx="16" fill="none" stroke="#30363d"/>
+  <text x="132" y="534" fill="#8b949e" font-size="16" font-family="Consolas, Menlo, monospace">prompt</text>
+  <rect x="216" y="512" width="86" height="32" rx="16" fill="none" stroke="#30363d"/>
+  <text x="228" y="534" fill="#8b949e" font-size="16" font-family="Consolas, Menlo, monospace">agents</text>
+  <rect x="312" y="512" width="98" height="32" rx="16" fill="none" stroke="#30363d"/>
+  <text x="324" y="534" fill="#8b949e" font-size="16" font-family="Consolas, Menlo, monospace">quality</text>
+  <rect x="420" y="512" width="110" height="32" rx="16" fill="none" stroke="#30363d"/>
+  <text x="432" y="534" fill="#8b949e" font-size="16" font-family="Consolas, Menlo, monospace">portable</text>
+  <text x="1160" y="614" text-anchor="end" fill="#8b949e" font-size="18" font-family="Consolas, Menlo, monospace">MIT · python</text>
+</svg>

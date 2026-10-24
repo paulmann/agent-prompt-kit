@@ -1,0 +1,37 @@
+name: Adaptation report
+description: A new domain was adapted — share the card so the next person starts faster
+labels: ["adaptation"]
+body:
+  - type: input
+    id: domain
+    attributes:
+      label: Domain
+      placeholder: database migration review
+    validations:
+      required: true
+  - type: textarea
+    id: card
+    attributes:
+      label: Domain Card
+      description: Paste the filled card. Eight fields, no more.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance line
+      description: One sentence a reviewer can test without asking you anything
+    validations:
+      required: true
+  - type: dropdown
+    id: cost
+    attributes:
+      label: How long did the adaptation take
+      options:
+        - under 15 minutes
+        - 15 to 45 minutes
+        - more than 45 minutes
+        - it required editing the prompt
+    validations:
+      required: true

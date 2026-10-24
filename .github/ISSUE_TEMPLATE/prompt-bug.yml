@@ -1,0 +1,45 @@
+name: Bug in the prompt
+description: A module produced a wrong, unsafe or unverifiable answer
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A prompt bug is a rule that produces damage when obeyed. Paste the request and the gate
+        line the agent printed — without the gate line there is nothing to check.
+  - type: input
+    id: module
+    attributes:
+      label: Module
+      description: Which module did not hold (M0 … M12)
+      placeholder: M4
+    validations:
+      required: true
+  - type: textarea
+    id: request
+    attributes:
+      label: The request given to the agent
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: answer
+    attributes:
+      label: What the agent answered
+      description: Abridged is fine; keep the labels and the gate line
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What the module required instead
+    validations:
+      required: true
+  - type: checkboxes
+    id: hygiene
+    attributes:
+      label: Hygiene
+      options:
+        - label: The quoted material contains no tokens, passwords or personal data
+          required: true

@@ -1,0 +1,91 @@
+# Validation against the original objective
+
+The kit exists because of one request. This page checks that request against the delivered artefacts,
+requirement by requirement, and states which requirements are verified and which remain assumptions.
+It is the answer to "did you build what was asked" that does not depend on the author's memory.
+
+## The objective, restated
+
+> Transform the user's original request into a universal, portable system prompt for an AI agent that
+> can (1) identify the subject and required skills from the current chat, (2) collect and synthesise
+> relevant context from other chats or provided sources, (3) operate as a topic-specialized agent
+> without hard-coding a single domain, and (4) use the GitHub Wiki Writer agent to create a new
+> repository containing the finalized prompt and its documentation — with identity, skills, context
+> rules, tool and safety rules, output format, a QA checklist and usage examples, every Markdown file
+> in English plus a Russian version, no invented context, explicit assumptions, modular and testable
+> instructions, and a final validation before publishing.
+
+## Requirement by requirement
+
+| # | Requirement | Where it is satisfied | How it is checked | Status |
+|---:|---|---|---|---|
+| 1 | Identify subject and skills from the current chat | M1 Task Card, M2 Domain Card | both cards are mandatory before any action; a reviewer sees them in the answer | verified by construction |
+| 2 | Collect and synthesise context from other chats or sources | M3 priority table and Context Ledger | every factual claim must appear in the ledger | verified by construction |
+| 3 | Topic-specialized without hard-coding a domain | M2 derives skills from the subject; M10 keeps domains outside the prompt | `examples/` holds three unrelated domains using one prompt | verified: 3 domains, 0 prompt edits |
+| 4 | Use the GitHub Wiki Writer agent to create the repository | the repository was authored and published with that pack, and the agent reviewed it | `wi/` sources, the pack's `audit`/`doc`/`assets` runs, the agent's review | verified, see "Who did what" |
+| 5 | Clear identity and mission | M0 | one sentence names the subject and the deliverable | verified by the lint's module check |
+| 6 | Required skills and capabilities | M2, M6 | capability table with a degradation column | verified by the lint's module check |
+| 7 | Context ingestion rules | M3 | priority order, ledger schema, six rules | verified by the lint's module check |
+| 8 | Tool-usage and safety rules | M6 | seven non-negotiable rules | verified by the lint's module check |
+| 9 | Output format requirements | M7 | five sections plus six rules | verified by the lint's module check |
+| 10 | Quality-assurance checklist | M8 plus `docs/QA.md` | ten tests, reported as one line; the same ten as a human checklist | verified: 10 tests in both places |
+| 11 | Usage examples | `examples/EXAMPLES.md` | three domains: routine, ambiguous, failure | verified: 3 examples, 3 gate lines |
+| 12 | English canonical, Russian supplementary | every `.md` has a `.ru.md` twin | `tools/prompt_lint.py`, rule `pairs.missing-translation` | verified mechanically |
+| 13 | No invented context | M3 rule 1, M4 labels, M9 mode 2 | the lint cannot check truth, but the prompt forbids unsourced claims and the examples label every claim | prompt-enforced, human-reviewed |
+| 14 | Assumptions explicit | M4 `[assumption]`, M7 section, M12 question 3 | each assumption names its consequence | verified in the three examples |
+| 15 | Modular, testable instructions | 13 modules with stable ids and a `**Check:**` line each | `tools/prompt_lint.py`: module sequence, check-line count | verified mechanically |
+| 16 | Validate before publishing | this page, plus the lint run and the pack's audit before the push | `python tools/prompt_lint.py` exits 0 on the published tree | verified |
+
+## What is verified, and what is assumed
+
+Being explicit here matters more than a clean table.
+
+**Verified by a command or an artefact**
+
+- module sequence `M0`…`M12` present, in order, once each;
+- 13 `**Check:**` lines, one per module;
+- 8 invariants, numbered;
+- every Markdown file has a Russian twin, and every twin has an English original;
+- no `{{placeholder}}` outside a code fence, no secret-shaped literal, no absolute machine path;
+- no dangling `M<number>` reference in any document;
+- no broken relative link;
+- prompt `version` equals the newest `CHANGELOG.md` version;
+- the repository passes the pack's own `doc`, `audit`, `assets` and `privacy` checks.
+
+**Assumed, not proven**
+
+- that the cards *reduce* drift in a given model — the mechanism is plausible and the examples show
+  it working, but it is not a controlled measurement;
+- that three examples are enough to teach the shape — chosen for cost, not measured for sufficiency;
+- that a fifteen-minute Domain Card is enough for a genuinely unfamiliar domain — it is a floor.
+
+These three are named as assumptions rather than presented as results. A validation page that claimed
+otherwise would be failure mode 11 from the prompt itself.
+
+## Who did what
+
+| Step | Actor |
+|---|---|
+| Prompt design, module contract, lint | this session, with the GitHub Wiki Writer pack as the toolchain |
+| Repository structure, documentation, assets | published with the pack's `ghagent` commands (`assets render`, `doc`, `audit`, `wiki build`) |
+| Independent review against these contracts | the Saved Agent "GitHub Wiki Writer", read-only profile: it inspected the tree and reported findings |
+| Publication | `gh` under the owner's identity; commits signed as the owner |
+
+## How to re-run the validation
+
+```bash
+python tools/prompt_lint.py                     # structural contracts
+python tools/prompt_lint.py --json | head -40   # the findings, machine-readable
+```
+
+Expected on the published tree: exit `0` and `PASS: 0 error(s)`, with a non-empty warnings list only
+if a workflow file is missing.
+
+## Open items for the owner
+
+1. The wiki is built and verified but not published: GitHub creates `<repo>.wiki.git` only when the
+   first page is saved in the interface.
+2. The social preview file exists at `assets/social-preview.png`; uploading it in Settings → Social
+   preview is a manual step.
+3. A `v1.0.0` tag is not created; the version is declared in three places and agrees, but the tag is
+   the owner's signature.
