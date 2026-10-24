@@ -7,18 +7,34 @@ tools/prompt_lint.py: the point is to verify the *published bytes*, not the loca
 import json
 import re
 import sys
+import urllib.error
 import urllib.request
 
 RAW = "https://raw.githubusercontent.com/paulmann/agent-prompt-kit/main/"
 BASE = "https://github.com/paulmann/agent-prompt-kit"
+API = "https://api.github.com/repos/paulmann/agent-prompt-kit/contents/"
 findings = []
 
 
 def fetch(name, binary=False):
-    request = urllib.request.Request(RAW + name, headers={"User-Agent": "external-check"})
-    with urllib.request.urlopen(request, timeout=30) as response:
-        data = response.read()
-        return data if binary else data.decode("utf-8")
+    """Read the published file through the API, not the raw CDN.
+
+    raw.githubusercontent.com serves a cached copy for minutes after a push, which makes an
+    external check report findings that were already fixed. The contents API with an
+    `application/vnd.github.raw` accept header answers from the repository itself.
+    """
+    request = urllib.request.Request(API + name, headers={
+        "User-Agent": "external-check",
+        "Accept": "application/vnd.github.raw",
+    })
+    try:
+        with urllib.request.urlopen(request, timeout=30) as response:
+            data = response.read()
+    except urllib.error.HTTPError:
+        request = urllib.request.Request(RAW + name, headers={"User-Agent": "external-check"})
+        with urllib.request.urlopen(request, timeout=30) as response:
+            data = response.read()
+    return data if binary else data.decode("utf-8")
 
 
 def add(rule, where, problem, fix):
