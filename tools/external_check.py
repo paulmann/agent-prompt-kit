@@ -189,6 +189,29 @@ for path in paths:
         if twin not in paths:
             add("pairs.missing", path, "no Russian translation", f"add {twin}")
 
+
+# 5b. language direction: a .ru.md must be Russian, its canonical twin must be English
+CYR = re.compile(r"[\u0410-\u044f\u0401\u0451]")
+LAT = re.compile(r"[A-Za-z]")
+for path in paths:
+    if not path.endswith(".md"):
+        continue
+    try:
+        body = fetch(path)
+    except Exception:
+        continue
+    prose = re.sub(r"```.*?```", " ", body, flags=re.DOTALL)
+    prose = re.sub(r"`[^`]*`", " ", prose)
+    prose = re.sub(r"https?://\\S+", " ", prose)
+    cyr, lat = len(CYR.findall(prose)), len(LAT.findall(prose))
+    if cyr + lat < 200:
+        continue
+    ratio = cyr / (cyr + lat)
+    if path.endswith(".ru.md") and ratio < 0.20:
+        add("language.direction", path, f"only {ratio:.0%} Cyrillic", "swap with its canonical twin")
+    elif not path.endswith(".ru.md") and ratio > 0.05:
+        add("language.direction", path, f"{ratio:.0%} Cyrillic", "swap with its translation")
+
 # 6. the image
 png = fetch("assets/social-preview.png", binary=True)
 if not png.startswith(b"\x89PNG\r\n\x1a\n"):

@@ -6,6 +6,19 @@ All notable changes to this project are documented here. The format is
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-10-24
+
+### Fixed
+
+- `SKILL.md` held the Russian text and `SKILL.ru.md` the English one: the two files were published swapped. The contents are exchanged and English is canonical again.
+- The linter gained the rule that would have caught it: `language.direction` measures the Cyrillic share of prose, so a `.ru.md` file holding English and a canonical file holding Russian both fail. Verified on two fixtures — a swapped `SKILL` pair and a swapped `PROMPT` pair — each producing exactly the expected errors.
+- The external check verifies the same property over the **published** bytes, not the local tree, so a swap that reaches GitHub is caught by reading GitHub.
+
+### Note
+
+The old pairing rule only proved that two files both existed. Existence is not direction: this defect
+passed the lint, the doc contract and the audit, and was found by diffing language proportions.
+
 ## [1.2.0] - 2026-10-24
 
 ### Added
@@ -75,7 +88,8 @@ All notable changes to this project are documented here. The format is
 
 - The kit ships without tokens, absolute machine paths or personal addresses; the linter fails the build if one appears, which is how the repository enforces on itself the rule the prompt states.
 
-[Unreleased]: https://github.com/paulmann/agent-prompt-kit/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/paulmann/agent-prompt-kit/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/paulmann/agent-prompt-kit/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/paulmann/agent-prompt-kit/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/paulmann/agent-prompt-kit/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/paulmann/agent-prompt-kit/releases/tag/v1.0.0

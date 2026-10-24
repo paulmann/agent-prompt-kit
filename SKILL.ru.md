@@ -1,133 +1,132 @@
 ---
 name: agent-prompt-kit
-description: "From finished work to a specialist environment. On /agent-prompt-kit the skill reads the current session and the runtime's related sessions, writes a Task Card and a Domain Card (modules M1, M2), creates a new workspace or saved-agent directory with AGENTS.md rules, a specialization skill, worked examples, an acceptance criterion and a store of prior work, then names the registration step and hands over a starting prompt. Load when a class of work repeats and the next round should start from a prepared environment: 'make a specialist for this topic', 'create a workspace for these tasks', 'we did this before — prepare the working environment', 'analyse the session and build the environment'."
+description: "Из законченной работы — в специализированное окружение. По команде /agent-prompt-kit навык читает текущую сессию и связанные сессии рантайма, выводит карточку задачи и карточку домена (модули M1, M2), создаёт каталог нового Workspace или сохранённого агента с правилами AGENTS.md, навыком-специализацией, разобранными примерами, критерием приёмки и хранилищем прежней работы, затем называет шаг регистрации и отдаёт стартовый промпт. Загружать, когда класс работ повторяется и следующий раз должен начинаться с готовой среды: «сделай специалиста под эту тему», «создай воркспейс под такие задачи», «мы это уже делали — подготовь рабочее место», «проанализируй сессию и собери среду»."
 license: MIT
-version: 1.2.0
+version: 1.2.1
 upstream: https://github.com/paulmann/agent-prompt-kit
 ---
 
-# `/agent-prompt-kit` — from a session to a specialist environment
+# `/agent-prompt-kit` — из сессии в специализированное окружение
 
-One command, one result: **a directory in which similar work is done well from the first step** —
-because the rules, the specialization, the worked examples, the acceptance criterion and the prior
-experience are already inside it.
+Одна команда = один результат: **каталог, в котором аналогичная работа выполняется качественно с
+первого шага** — потому что в нём уже лежат правила, специализация, разобранные примеры, критерий
+приёмки и найденный прошлый опыт.
 
-This is **not** "give the current session a different personality". Changing the role inside the
-current window is a side mode (see §7). The main action is to create a working environment, register
-it, and hand the task over to it.
+Это **не** «надеть на текущую сессию другой характер». Смена роли в текущем окне — побочный режим
+(см. §7). Основное действие — создать рабочее место, зарегистрировать его и передать в него задачу.
 
-## 1. Material: this session and the related ones
+## 1. Материал: текущая сессия и связанные
 
-Sources in order of trust:
+Источники в порядке доверия:
 
-| # | Source | What it gives |
+| # | Источник | Что даёт |
 |---|---|---|
-| 1 | The current session's own context | what was asked, done, verified, and where it broke |
-| 2 | The runtime's index over all sessions, when it has one | the same across past sessions and other environments |
-| 3 | Session transcripts and files | detail the index truncated |
-| 4 | The project tree and `memory/` | rules that apply now, and existing experience records |
+| 1 | Контекст текущей сессии | что просили, что сделали, что проверили, где сломались |
+| 2 | Индекс всех сессий рантайма (если есть) | то же по прошлым сессиям и другим окружениям |
+| 3 | Транскрипты и файлы сессий | подробности, если индекс обрезал текст |
+| 4 | Рабочее дерево проекта и `memory/` | действующие правила и прежние записи опыта |
 
-Rules:
+Правила:
 
-- Quote a session, not an impression: "in session `<id>` we tried X and got Y".
-- **Filter index noise.** An index contains injected context, tool transcripts and environment dumps.
-  "We discussed this" is concluded only from the user's own messages.
-- A past session is evidence of what happened, not of what is true now. Re-verify before reuse.
+- Цитируй сессию, а не впечатление: «в сессии `<id>` пробовали X, получили Y».
+- **Фильтруй шум индекса.** В индексе лежат инъекции контекста, транскрипты инструментов и дампы
+  окружения. Вывод «это обсуждалось» делается только по сообщениям пользователя.
+- Прошлая сессия — свидетельство о том, что было, а не о том, что верно сейчас. Проверяй заново.
 
-## 2. Cards: what this class of work is
-
-```text
-TASK CARD
-Subject · Deliverable · Audience · Success looks like · Constraints · Unknown · Out of scope
-
-DOMAIN CARD
-Practitioner · Vocabulary (5-9 terms) · Skill set (3-6) · Must verify (3-5 facts) ·
-Sources of truth · Typical failure · Definition of done · Anti-patterns
-```
-
-What the material does not support, write as `unknown`. A guess instead of a fact is a defect: the
-next agent will read it as a rule.
-
-## 3. Environment: what exactly to create
+## 2. Карточки: что за класс работ
 
 ```text
-<new environment root>/
-  AGENTS.md              rules for this class of work (short: invariants plus domain bans)
-  DOMAIN-CARD.md         the domain card; inside it, an acceptance criterion a reviewer can test
-  .dsh/skills/<topic>/SKILL.md   the specialization: visible in the palette only inside this environment
-  examples/              two or three worked cases: one routine, one failure
-  memory/                the experience store (M13): recipes/, failures/, tasks/, artifacts/
-  README.md              what it is, how to use it, version and date
+КАРТОЧКА ЗАДАЧИ
+Тема · Результат · Адресат · Успех значит · Ограничения · Неизвестно · Вне рамок
+
+КАРТОЧКА ДОМЕНА
+Практик · Словарь (5-9 терминов) · Набор навыков (3-6) · Проверить (3-5 фактов) ·
+Источники истины · Типичный провал · Готово, когда · Анти-паттерны
 ```
 
-Content requirements:
+Чего нет в материале — пиши `неизвестно`. Догадка вместо факта — дефект: следующий агент примет её
+за правило.
 
-| File | Must contain |
+## 3. Окружение: что именно создать
+
+```text
+<корень нового окружения>/
+  AGENTS.md              правила этого класса работ (сжато: инварианты + доменные запреты)
+  DOMAIN-CARD.md         карточка домена; внутри — критерий приёмки, проверяемый ревьюером
+  .dsh/skills/<тема>/SKILL.md    специализация: видна в палитре только внутри этого окружения
+  examples/              два-три разобранных случая: обычный и провальный
+  memory/                хранилище опыта (M13): recipes/, failures/, tasks/, artifacts/
+  README.md              что это, как пользоваться, версия и дата
+```
+
+Требования к содержимому:
+
+| Файл | Обязательно внутри |
 |---|---|
-| `AGENTS.md` | safety rules, no secrets, a verification step for every piece of work, domain boundaries |
-| `DOMAIN-CARD.md` | the acceptance criterion in one sentence, testable without asking the author |
-| `SKILL.md` | when to load it, what to do, how to verify; the domain's anti-patterns |
-| `examples/` | at least one failure with its cause — otherwise the examples teach only the happy path |
-| `memory/` | at least one recipe or failure record that passes `experience.py check` |
+| `AGENTS.md` | правила безопасности, запрет секретов, шаг проверки каждой работы, границы домена |
+| `DOMAIN-CARD.md` | критерий приёмки одной фразой, проверяемой без вопросов к автору |
+| `SKILL.md` | когда загружать, что делать, чем проверять; доменные анти-паттерны |
+| `examples/` | минимум один провал с причиной — иначе примеры учат только happy path |
+| `memory/` | хотя бы один рецепт или запись провала, прошедшая `experience.py check` |
 
-## 4. Registration: honest per runtime
+## 4. Регистрация: честно про каждый рантайм
 
-An environment works only when the runtime knows about it. This is the one step a model often cannot
-do, and it may never be reported as done when it was not.
+Окружение становится рабочим только когда рантайм о нём знает. Это единственный шаг, который
+агент часто не может сделать сам, — и его запрещено изображать выполненным.
 
-| Runtime | The model does | The human does | How to check |
+| Рантайм | Что делает модель | Что делает человек | Проверка |
 |---|---|---|---|
-| **HARNESS** | creates the whole directory with every file | adds the directory as a workspace (left panel → add workspace) | the directory appears in the workspace list |
-| **AutoClaw2** | writes the skill into `<profile>\.pi\agent\skills\` and the command file into `...\prompts\` | reloads the app so the resource snapshot is rebuilt | the command appears in the `/` palette, the skill in the list |
-| **SagaAI / other** | depends on whether it exposes a registration API | as the runtime requires | name the step instead of assuming it |
+| **HARNESS** | создаёт каталог целиком со всеми файлами | добавляет каталог как Workspace (левая панель → добавить Workspace) | каталог появился в списке Workspace |
+| **AutoClaw2** | пишет навык в `<профиль>\.pi\agent\skills\` и файл команды в `...\prompts\` | перезагружает приложение, чтобы снимок ресурсов пересобрался | команда видна в палитре `/`, навык — в списке |
+| **SagaAI / другой** | зависит от наличия API регистрации | по обстановке | назови шаг, а не подразумевай |
 
-How to report it: "the directory exists at X; one step remains that I cannot do: <exact action>".
+Формулировка для отчёта: «каталог создан по пути X; остался один шаг, который я сделать не могу:
+<точное действие>».
 
-## 5. Handoff: the starting prompt
+## 5. Передача: стартовый промпт
 
-The last output is ready-to-paste text for the new window, not "now go and work":
+Последний выход — готовый текст для нового окна, а не «теперь идите работайте»:
 
 ```text
-Environment: <path>
-Rules: this environment's AGENTS.md — read it first.
-Task: <the first concrete task of this class>
-Acceptance: <from DOMAIN-CARD.md>
-Start with: python tools/experience.py search "<task words>" --root .
+Окружение: <путь>
+Правила: AGENTS.md этого окружения — читать первым.
+Задача: <первая конкретная задача класса>
+Критерий приёмки: <из DOMAIN-CARD.md>
+С чего начать: python tools/experience.py search "<слова задачи>" --root .
 ```
 
-## 6. Verifying the result
+## 6. Проверка результата
 
-- Every file exists at the named path; no existing file was overwritten.
-- `python tools/experience.py check --root <environment>` → `PASS`.
-- The acceptance criterion in `DOMAIN-CARD.md` is testable without asking the author.
-- The registration step is named and its effect is observable (an entry in the workspace list, a
-  command in the palette).
-- The report ends with a gate line: `gate 12/12`, or `gate N/12 — failed: <reasons>`.
+- Каждый файл существует по названному пути; ни один чужой файл не перезаписан.
+- `python tools/experience.py check --root <окружение>` → `PASS`.
+- Критерий приёмки в `DOMAIN-CARD.md` проверяем без вопросов к автору.
+- Шаг регистрации назван, и его результат можно увидеть (запись в списке Workspace, команда в палитре).
+- В отчёте есть строка ворот: `ворота 12/12` или `ворота N/12 — провалы: <причины>`.
 
-## 7. Side mode: specializing the current session
+## 7. Побочный режим: специализация текущей сессии
 
-When no environment is needed — the task is one-off — the skill works as a session prompt: Task Card
-and Domain Card before acting, `[fact]`/`[inference]`/`[assumption]` labels, the twelve-item gate as one
-line. Same contract, without steps 3–5. Do not mix the modes: having promised an environment, deliver a
-directory, not a mood.
+Если окружение не нужно — например, задача разовая, — навык работает как промпт на сессию:
+карточка задачи и карточка домена до действий, метки `[факт]`/`[вывод]`/`[предположение]`, ворота из
+12 проверок строкой. Это тот же каркас, но без шагов 3–5. Смешивать режимы нельзя: обещав
+окружение, отдай каталог, а не настроение.
 
-## 8. Safety
+## 8. Безопасность
 
-1. Credentials, tokens, keys, cookies and session data never enter the environment or `memory/`.
-   Use `<HOST>`, `<USER>`, `<PATH>`, `<API_KEY>`, `<DB>`, `<CUSTOMER>`.
-2. Personal data and customer content are not stored; the shape of a solution is.
-3. Experience records are deprecated, never deleted.
-4. Do not overwrite existing files: on a path collision, keep a backup beside it and say so in the report.
+1. Секреты, токены, ключи, cookies, данные сессий не попадают ни в окружение, ни в `memory/`.
+   Заполнители: `<HOST>`, `<USER>`, `<PATH>`, `<API_KEY>`, `<DB>`, `<CUSTOMER>`.
+2. Персональные данные и содержимое заказчика не сохраняются: хранится форма решения.
+3. Записи опыта не удаляются — только `deprecated` со ссылкой на замену.
+4. Не перезаписывай существующие файлы: при совпадении пути — бэкап рядом и строка в отчёте.
 
-## 9. Kit contents
+## 9. Файлы набора
 
-| File | What it is |
+| Файл | Что это |
 |---|---|
-| `PROMPT.md` / `PROMPT.ru.md` | the framework: 14 modules, 14 `Check` lines, 10 invariants, a 12-item gate |
-| `docs/INSTALL.md` | installation into AutoClaw2, HARNESS, SagaAI, with verification |
-| `docs/ADAPTATION.md` | how to fill the domain card |
-| `skills/experience-reuse/` | M13: record templates, examples, policy |
-| `tools/experience.py` | the store: `search`, `add`, `check`, `deprecate`, `selftest` |
-| `tools/install.py` | installs the skill and the command into a runtime, with `--check` |
+| `PROMPT.md` / `PROMPT.ru.md` | каркас: 14 модулей, 14 строк `Check`, 10 инвариантов, ворота 12 |
+| `docs/INSTALL.md` | установка в AutoClaw2, HARNESS, SagaAI с проверкой |
+| `docs/ADAPTATION.md` | как заполнять карточку домена |
+| `skills/experience-reuse/` | M13: шаблоны записей, примеры, политика |
+| `tools/experience.py` | хранилище опыта: `search`, `add`, `check`, `deprecate`, `selftest` |
+| `tools/install.py` | установка навыка и команды в рантайм, с `--check` |
 
-Version 1.2.0 · MIT · https://github.com/paulmann/agent-prompt-kit
+Версия 1.2.0 · MIT · https://github.com/paulmann/agent-prompt-kit

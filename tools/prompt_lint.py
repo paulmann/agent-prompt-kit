@@ -172,6 +172,42 @@ def check_pairs(root: Path) -> None:
                 f"{relative} has no Russian version ({twin.name})", relative)
 
 
+def check_language_direction(root: Path) -> None:
+    """A file named .ru.md must be Russian and its canonical twin must be English.
+
+    The pairing rule alone only checks that both files exist. Two files with swapped contents pass it
+    silently — measured on this repository, where SKILL.md held the Russian text and SKILL.ru.md the
+    English one. Proportions are measured on prose only: code, inline code and URLs carry no language.
+    """
+    cyrillic = re.compile(r"[А-Яа-яЁё]")
+    latin = re.compile(r"[A-Za-z]")
+
+    def share(text: str) -> float | None:
+        prose = re.sub(r"```.*?```", " ", text, flags=re.DOTALL)
+        prose = re.sub(r"`[^`]*`", " ", prose)
+        prose = re.sub(r"https?://\S+", " ", prose)
+        cyr, lat = len(cyrillic.findall(prose)), len(latin.findall(prose))
+        if cyr + lat < 200:          # too little prose to judge
+            return None
+        return cyr / (cyr + lat)
+
+    for path in sorted(root.rglob("*.md")):
+        if any(part in {".git", ".ghagent"} for part in path.parts):
+            continue
+        relative = path.relative_to(root).as_posix()
+        ratio = share(read(path))
+        if ratio is None:
+            continue
+        if path.name.endswith(".ru.md"):
+            if ratio < 0.20:
+                add("error", "language.direction",
+                    f"a .ru.md file is only {ratio:.0%} Cyrillic: it holds English text", relative)
+        elif ratio > 0.05:
+            add("error", "language.direction",
+                f"the canonical file is {ratio:.0%} Cyrillic: it holds Russian text — swap it with its twin",
+                relative)
+
+
 def check_text(root: Path) -> None:
     for path in sorted(root.rglob("*.md")):
         if ".git" in path.parts:
@@ -286,6 +322,7 @@ def main(argv: list[str]) -> int:
     check_modules(root)
     check_experience_module(root)
     check_pairs(root)
+    check_language_direction(root)
     check_text(root)
     check_changelog(root)
     check_cross_references(root)
