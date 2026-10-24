@@ -13,11 +13,7 @@ All notable changes to this project are documented here. The format is
 - `SKILL.md` held the Russian text and `SKILL.ru.md` the English one: the two files were published swapped. The contents are exchanged and English is canonical again.
 - The linter gained the rule that would have caught it: `language.direction` measures the Cyrillic share of prose, so a `.ru.md` file holding English and a canonical file holding Russian both fail. Verified on two fixtures — a swapped `SKILL` pair and a swapped `PROMPT` pair — each producing exactly the expected errors.
 - The external check verifies the same property over the **published** bytes, not the local tree, so a swap that reaches GitHub is caught by reading GitHub.
-
-### Note
-
-The old pairing rule only proved that two files both existed. Existence is not direction: this defect
-passed the lint, the doc contract and the audit, and was found by diffing language proportions.
+- The old pairing rule only proved that two files both existed. Existence is not direction: this defect passed the linter, the documentation contract and the audit, and was found by diffing language proportions.
 
 ## [1.2.0] - 2026-10-24
 
