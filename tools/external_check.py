@@ -156,15 +156,23 @@ for needle, rule, fix in [
 # 4. PROMPT.md contract
 prompt = fetch("PROMPT.md")
 modules = re.findall(r"^## (M\d+) — ", prompt, flags=re.MULTILINE)
-expected = [f"M{n}" for n in range(13)]
+expected = [f"M{n}" for n in range(14)]
 if modules != expected:
-    add("prompt.modules", "PROMPT.md", f"modules are {modules}", "M0..M12 in order")
+    add("prompt.modules", "PROMPT.md", f"modules are {modules}", "M0..M13 in order")
 checks = len(re.findall(r"^\*\*Check:\*\*", prompt, flags=re.MULTILINE))
-if checks != 13:
+if checks != 14:
     add("prompt.check", "PROMPT.md", f"{checks} check lines", "one per module")
 block = prompt.split("## Invariants", 1)[1] if "## Invariants" in prompt else ""
-if len(re.findall(r"^\d+\. ", block, flags=re.MULTILINE)) != 8:
-    add("prompt.invariants", "PROMPT.md", "invariants are not eight", "keep eight")
+if len(re.findall(r"^\d+\. ", block, flags=re.MULTILINE)) != 9:
+    add("prompt.invariants", "PROMPT.md", "invariants are not nine", "keep nine")
+gate = re.search(r"## M8 .*?(?=\n## )", prompt, flags=re.DOTALL)
+if gate:
+    rows = len(re.findall(r"^\| \d+ \| ", gate.group(0), flags=re.MULTILINE))
+    if rows != 11:
+        add("prompt.gate", "PROMPT.md", f"the gate lists {rows} items", "keep eleven")
+for marker in ("## M13 — ", "Experience Store", "applicability", "last_verified_at"):
+    if marker not in prompt:
+        add("prompt.experience", "PROMPT.md", f"M13 marker missing: {marker}", "complete M13")
 
 # 5. translation pairing over the whole tree
 listing = json.loads(urllib.request.urlopen(urllib.request.Request(
