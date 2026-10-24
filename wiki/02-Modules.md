@@ -1,6 +1,6 @@
 # Module map
 
-Thirteen modules, one question each. Every module ends with a `**Check:**` line — that is the
+Fourteen modules, one question each. Every module ends with a `**Check:**` line — that is the
 difference between an instruction and a wish.
 
 | Module | Question | Output that proves it |
@@ -18,11 +18,19 @@ difference between an instruction and a wish.
 | M10 | How do I point it at a new domain? | one card, one example, one acceptance line |
 | M11 | What does a good answer look like? | three examples |
 | M12 | What do I check before sending? | five answered questions |
+| M13 | How do I avoid redoing work already done? | retrieval, applicability verdict, clean store |
+
+## M13 in one paragraph
+
+Before planning, the agent searches a store of prior work with one command; the result is ranked and
+each rank carries its reason. Reuse happens only after six questions pass — goal, environment,
+assumptions, validation coverage, security, freshness. After verification the result may be recorded,
+validated by the schema, with secrets and machine paths refused. Records are deprecated, never deleted.
 
 ## Invariants
 
-Eight rules never change, in any domain: declared subject, sourced or labelled claims, sandboxed
+Nine rules never change, in any domain: declared subject, sourced or labelled claims, sandboxed
 irreversible actions, no displayed secrets, no green check over nothing, stated unverified parts,
-the user's language, a reported gate.
+the user's language, a reported gate, and experience as a hypothesis rather than authority.
 
 Full text: `PROMPT.md`.

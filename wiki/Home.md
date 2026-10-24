@@ -9,7 +9,8 @@ claim, and gates its own output before sending.
 | Step | Page | Why |
 |---|---|---|
 | 1 | [Usage](01-Usage) | load the prompt, run the lint, see what a correct answer looks like |
-| 2 | [Module map](02-Modules) | the thirteen modules and what each one verifies |
+| 2 | [Module map](02-Modules) | the fourteen modules and what each one verifies |
+| 3 | [Experience store](https://github.com/paulmann/agent-prompt-kit/tree/main/memory) | where prior work lives, and the one command that retrieves it |
 
 ## The two cards
 

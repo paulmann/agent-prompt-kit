@@ -3,7 +3,7 @@
 This repository ships a system prompt, not a program. An agent working with it must keep two things
 true: the prompt stays structurally complete, and the two language versions never diverge.
 
-Read `PROMPT.md` before anything else. Module identifiers (`M0`…`M12`) are stable addresses: they are
+Read `PROMPT.md` before anything else. Module identifiers (`M0`…`M13`) are stable addresses: they are
 used in reviews, in `docs/` and in `tools/prompt_lint.py`.
 
 ## Verification
@@ -11,12 +11,15 @@ used in reviews, in `docs/` and in `tools/prompt_lint.py`.
 ```bash
 python tools/prompt_lint.py          # exit 0 = structural contracts hold
 python tools/prompt_lint.py --json   # machine-readable findings
+python tools/experience.py selftest  # the experience store rejects what it claims to reject
+python tools/experience.py check     # schema, secrets, duplicates, staleness
 ```
 
 The linter fails on: a missing module, a module out of order, a missing `**Check:**` line, a
 translation without its English twin, an unresolved `{{placeholder}}` outside a code fence, a broken
 relative link, a secret-shaped literal, an absolute machine path, a dangling `M<number>` reference,
-and a version mismatch between the prompt header and the changelog.
+a version mismatch between the prompt header and the changelog, an incomplete M13, a gate with the
+wrong number of tests, and a missing store, tool or skill section.
 
 ## Editing the prompt
 
@@ -24,6 +27,8 @@ and a version mismatch between the prompt header and the changelog.
 2. Change `PROMPT.ru.md` in the same commit, keeping the same module set.
 3. Bump `version` in both front matters and add a `CHANGELOG.md` entry.
 4. Run the linter until it exits `0`.
+5. If a rule needs a tool to be followable, ship the tool: M13 works because retrieval is one command,
+   not because the prompt asks politely.
 
 Never edit a `.ru.md` file alone. Never translate a module differently in substance: a translation
 that softens an invariant is a defect, not a style choice.
@@ -41,7 +46,8 @@ When you operate *under* this prompt, these hold:
 | Smallest verifiable step, verify after acting | M5 |
 | Sandbox irreversible actions; never print secrets | M6 |
 | Answer in five sections, in the user's language | M7 |
-| Report the ten-item gate as one line | M8 |
+| Report the eleven-item gate as one line | M8 |
+| Search the store before planning; record after verifying | M13 |
 
 ## Traps when using this kit
 
@@ -49,9 +55,12 @@ When you operate *under* this prompt, these hold:
 |---|---|---|
 | Editing the prompt to add a domain | the file grows by a page per project | fill a Domain Card instead (M2, M10) |
 | Naming a tool in the prompt | the prompt stops working in another runtime | use a capability class (M6) |
+| Treating retrieved experience as truth | an old recipe applied to a changed environment | run the six-question applicability check (M13) |
+| Recording every task | the store becomes noise and retrieval stops finding anything | record only reusable, general, verified work |
+| Deleting an outdated record | the audit trail vanishes and the wrong approach returns | deprecate with `superseded_by` |
 | Reporting a gate line without running the gate | the answer looks auditable and is not | run M8, then print the line |
 | Translating a module loosely | the two versions state different rules | translate in the same commit, same module set |
-| Renumbering modules | every reference in docs and reviews breaks | keep `M0`…`M12` stable |
+| Renumbering modules | every reference in docs and reviews breaks | keep `M0`…`M13` stable |
 | Treating the linter as a quality proof | it checks structure, not judgement | use `docs/QA.md` for the content |
 
 ## Do not
@@ -79,7 +88,10 @@ PROMPT.ru.md         the prompt, Russian
 AGENTS.md            this file
 docs/                design, adaptation, QA, validation
 examples/            three worked domains
-tools/prompt_lint.py the only executable here
+skills/experience-reuse/  the M13 skill: templates, examples, policy
+memory/              the experience store (records live here)
+tools/prompt_lint.py the document's contracts
+tools/experience.py  the store and its one-command retrieval
 ```
 
 ## License

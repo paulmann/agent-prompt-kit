@@ -15,7 +15,7 @@ dangling module references and version agreement with the changelog.
 
 ## Rules
 
-- **Module identifiers are an interface.** `M0`…`M12` are referenced from `docs/`, from reviews and
+- **Module identifiers are an interface.** `M0`…`M13` are referenced from `docs/`, from reviews and
   from the linter. Do not renumber; add a new module only if a genuinely new question appears.
 - **A module without a `**Check:**` line is not accepted.** If you cannot state how it is verified,
   the module is an opinion, not an instruction.

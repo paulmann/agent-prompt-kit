@@ -53,7 +53,7 @@
 ## Следующий шаг
 php tools/lint.php && php backend/tests/run.php     # ожидается: 0 провалов
 
-ворота 10/10
+ворота 11/11
 ```
 
 ## Пример B — служба Windows с конфигуратором WinForms
@@ -109,7 +109,7 @@ php tools/lint.php && php backend/tests/run.php     # ожидается: 0 пр
 ## Следующий шаг
 dotnet test RdpAudit.sln -c Release --no-build -p:Platform=x64   # ожидается: всё зелёное
 
-ворота 10/10
+ворота 11/11
 ```
 
 ## Пример C — документация как продукт
@@ -166,7 +166,7 @@ dotnet test RdpAudit.sln -c Release --no-build -p:Platform=x64   # ожидае�
 ## Следующий шаг
 python <pack>/tools/ghagent.py wiki build && ... wiki verify     # ожидается: 0 ошибок
 
-ворота 10/10
+ворота 11/11
 ```
 
 ## Что общего у трёх примеров

@@ -1,11 +1,12 @@
 # agent-prompt-kit
 
-**A portable system prompt that turns any AI agent into a topic specialist at runtime: it derives the subject and skill set from the conversation, ingests context under a source ledger, labels every claim, and gates its own output. Twelve numbered modules, machine-checked.**
+**A portable system prompt that turns any AI agent into a topic specialist at runtime: it derives the subject and skill set from the conversation, retrieves prior work instead of redoing it, labels every claim, and gates its own output. Fourteen numbered modules, machine-checked.**
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Modules](https://img.shields.io/badge/modules-13-6f42c1)](PROMPT.md)
+[![Modules](https://img.shields.io/badge/modules-14-6f42c1)](PROMPT.md)
 [![Lint](https://img.shields.io/badge/lint-prompt__lint.py-informational)](tools/prompt_lint.py)
-[![Tests](https://img.shields.io/badge/contracts-28%20checks-brightgreen)](tools/prompt_lint.py)
+[![Experience](https://img.shields.io/badge/experience-reuse-0f766e)](skills/experience-reuse/SKILL.md)
+[![Tests](https://img.shields.io/badge/contracts-31%20checks-brightgreen)](tools/prompt_lint.py)
 [![Русская версия](https://img.shields.io/badge/lang-EN%20%2F%20RU-0ea5e9)](README.ru.md)
 
 <img src="https://github.com/paulmann/agent-prompt-kit/raw/main/assets/social-preview.png"
@@ -17,6 +18,10 @@ shallowly, or so domain-bound that they cannot be reused. This kit takes a third
 is generic until it reads the request, then it writes down the subject, the skill set, the facts it
 must verify and its own definition of done, and works inside that contract.
 
+A second cost is repetition: the same migration, release or documentation pass is re-derived because
+nothing reminds the agent it was done before. M13 fixes that with a store of prior work and a single
+command to retrieve it, so a repeated task costs one search instead of a re-run of the discovery.
+
 > **Status.** Every number here was measured on 2026-10-24 against version 1.0.0 with
 > `python tools/prompt_lint.py`. Long guides live in [`docs/`](docs/) and the
 > [Wiki](https://github.com/paulmann/agent-prompt-kit/wiki).
@@ -27,7 +32,8 @@ must verify and its own definition of done, and works inside that contract.
 - [In numbers](#in-numbers)
 - [Installation](#installation)
 - [Usage](#usage)
-- [The thirteen modules](#the-thirteen-modules)
+- [The fourteen modules](#the-fourteen-modules)
+- [Experience reuse](#experience-reuse)
 - [The quality gate](#the-quality-gate)
 - [Portability](#portability)
 - [Documentation](#documentation)
@@ -42,13 +48,16 @@ One file, `PROMPT.md`, plus the material needed to trust and adapt it.
 
 | Piece | What it gives you |
 |---|---|
-| [`PROMPT.md`](PROMPT.md) | the system prompt: 13 modules, 13 self-checks, 8 invariants |
+| [`PROMPT.md`](PROMPT.md) | the system prompt: 14 modules, 14 self-checks, 9 invariants |
 | [`AGENTS.md`](AGENTS.md) | the same contract in machine-facing form, for coding agents that read repository rules |
-| [`tools/prompt_lint.py`](tools/prompt_lint.py) | verifies module completeness, translation pairing, placeholders, links, secrets, version agreement |
+| [`skills/experience-reuse/`](skills/experience-reuse/SKILL.md) | the M13 skill: workflow, applicability checklist, four record templates, a security policy |
+| [`tools/experience.py`](tools/experience.py) | the experience store and its one-command retrieval, with schema and secret checks |
+| [`memory/`](memory/README.md) | where records live; three sanitised examples ship with the kit |
+| [`tools/prompt_lint.py`](tools/prompt_lint.py) | verifies module completeness, translation pairing, placeholders, links, secrets, version agreement, M13 and the gate width |
 | [`examples/EXAMPLES.md`](examples/EXAMPLES.md) | three domains, same shape: routine case, ambiguous case, failure case |
 | [`docs/`](docs/) | design rationale, adaptation protocol, QA checklist, validation against the objective |
 
-The prompt solves four concrete problems, in this order:
+The prompt solves five concrete problems, in this order:
 
 1. **Subject drift** — the agent answers a neighbouring, easier question. Countered by the Task
    Card (M1) and the Domain Card (M2), which must exist before any action.
@@ -56,7 +65,9 @@ The prompt solves four concrete problems, in this order:
    by the Context Ledger (M3) and three evidence labels (M4).
 3. **Unverifiable claims** — "it works" with no observation. Countered by the operating loop (M5),
    the capability table (M6) and the gate (M8).
-4. **Reuse cost** — a new domain means rewriting the prompt. Countered by the specialization
+4. **Repeated work** — the same task re-derived because nothing surfaced the prior attempt. Countered
+   by the Experience Store and its applicability check (M13).
+5. **Reuse cost** — a new domain means rewriting the prompt. Countered by the specialization
    protocol (M10): one card, one examples file, one acceptance line.
 
 ## In numbers
@@ -65,11 +76,13 @@ Measured in this tree on 2026-10-24:
 
 | Surface | Value | Measurement source |
 |---|---:|---|
-| Modules in the prompt | 13 | `PROMPT.md`, headings `M0`…`M12` |
-| Self-check lines | 13 | `grep -c '^\*\*Check:\*\*' PROMPT.md` |
-| Invariants | 8 | `PROMPT.md`, section "Invariants" |
-| Contract checks in the linter | 28 | `python tools/prompt_lint.py --json` |
-| Worked examples | 3 | `examples/EXAMPLES.md` |
+| Modules in the prompt | 14 | `PROMPT.md`, headings `M0`…`M13` |
+| Self-check lines | 14 | `grep -c '^\*\*Check:\*\*' PROMPT.md` |
+| Invariants | 9 | `PROMPT.md`, section "Invariants" |
+| Quality-gate tests | 11 | `PROMPT.md`, section M8 |
+| Contract checks in the linter | 31 | `python tools/prompt_lint.py --json` |
+| Experience self-tests | 13 | `python tools/experience.py selftest` |
+| Worked examples | 3 + 3 sanitised records | `examples/`, `skills/experience-reuse/examples/` |
 | Runtime dependencies | 0 | imports in `tools/` |
 
 ## Installation
@@ -93,7 +106,7 @@ Only Python 3.11+ is required. No packages, no service, no account.
 The prompt is deliberately tool-agnostic — see [Portability](#portability). A worked answer, in three
 unrelated domains, is in [`examples/EXAMPLES.md`](examples/EXAMPLES.md).
 
-## The thirteen modules
+## The fourteen modules
 
 | Module | Question it answers | Verified by |
 |---|---|---|
@@ -102,25 +115,49 @@ unrelated domains, is in [`examples/EXAMPLES.md`](examples/EXAMPLES.md).
 | M2 | Which specialist is needed, and what must be verified? | Domain Card, acceptance condition testable |
 | M3 | What context exists, and how good is it? | Context Ledger with a source per claim |
 | M4 | How do I label what I know? | `[fact]` / `[inference]` / `[assumption]` |
-| M5 | How do I work without breaking things? | loop: frame → plan → act → verify → record |
+| M5 | How do I work without breaking things? | loop: frame → retrieve → plan → act → verify → record |
 | M6 | What may I use, and what is forbidden? | capability table, safety rules |
-| M7 | What shape does the answer have? | five sections, language follows the user |
-| M8 | How do I know it is finished? | ten-item gate, reported as a line |
-| M9 | How is this prompt defeated? | twelve failure modes with counters |
+| M7 | What shape does the answer have? | five sections plus an optional reused-experience section |
+| M8 | How do I know it is finished? | eleven-item gate, reported as a line |
+| M9 | How is this prompt defeated? | sixteen failure modes with counters |
 | M10 | How do I point it at a new domain? | one card, one examples file, one acceptance line |
 | M11 | What does a good answer look like? | three worked examples |
 | M12 | What do I check before sending? | five questions, answered in one line each |
+| M13 | How do I avoid redoing work already done? | retrieval before planning, applicability verdict, sanitised store |
+
+## Experience reuse
+
+M13 turns "we did this before" into a tool call instead of a hope:
+
+```bash
+python tools/experience.py search "add nullable column to list endpoint" --limit 5
+```
+
+```text
+query: add nullable column to list endpoint  ·  2 candidate(s)
+  [ 25] recipe    add-nullable-column-to-list-endpoint validated overlap 5, validated, high confidence, verified 2d ago
+  [ 11] failure   retry-migration-until-it-passes    validated overlap 1, validated, prior failure: read before acting
+```
+
+Each line carries the reason for its rank, so the agent can reject a candidate on evidence rather
+than on vibes. Six questions decide reuse — goal, environment, assumptions, validation coverage,
+security, freshness — and an unstated adaptation counts as a blind copy.
+
+What the store refuses, measured by its own tests: a record containing a token-shaped literal, a
+recipe without a `Rollback` section, a record without `last_verified_at` marked `validated`. What it
+warns about: a validation older than 180 days, a near-duplicate title. What it never does: delete —
+records are deprecated with a pointer to the replacement.
 
 ## The quality gate
 
-The agent must print one line, for example `gate 10/10` or `gate 8/10 — 6, 9 failed: <reason>`.
-The ten tests are defined in M8; the two that fail most often in practice are:
+The agent must print one line, for example `gate 11/11` or `gate 9/11 — 6, 9 failed: <reason>`.
+The eleven tests are defined in M8; the two that fail most often in practice are:
 
 - **#4 evidence coverage** — a factual claim that never entered the Context Ledger;
 - **#6 verification** — "it works" without a command or an observation.
 
 A gate line is not decoration: it is what makes an answer auditable by someone who did not watch
-the agent work. `docs/QA.md` turns the same ten tests into a human review checklist.
+the agent work. `docs/QA.md` turns the same eleven tests into a human review checklist.
 
 ## Portability
 

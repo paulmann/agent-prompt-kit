@@ -69,8 +69,8 @@ rather than an afterthought.
 
 ## Why the gate is ten items and not forty
 
-A gate longer than ten items is not run. Ten is what fits on one screen and can be reported as a
-single line (`gate 10/10`). The two items that fail most often — evidence coverage and verification —
+A gate longer than eleven items is not run. Eleven is what still fits on one screen and can be reported as a
+single line (`gate 11/11`). The two items that fail most often — evidence coverage and verification —
 are the reason the other eight are not enough on their own.
 
 ## Why the failure-mode table exists
@@ -97,6 +97,40 @@ is the case that actually breaks agent workflows. M6's degradation column is the
 
 Naming the limits is part of the design: a prompt that claims to solve everything above is itself an
 example of failure mode 11 (authority theatre).
+
+## Why a module exists for repeated work
+
+The first version of this prompt had twelve modules and no answer to a specific waste: the same task,
+done before, being derived again from zero. The usual fix — "remember things" — fails for a measurable
+reason: a retrieval rule that costs a directory walk gets skipped under time pressure, and a rule that
+is skipped is worse than absent, because the agent believes it complied.
+
+M13 is therefore built on an asymmetry: **retrieval must cost one command, recording must be validated
+by a machine, and reuse must be justified by six questions.**
+
+| Decision | Alternative rejected | Why |
+|---|---|---|
+| A store of Markdown records plus a CLI | a vector database, or "the model remembers" | inspectable, diffable, works offline, no index to maintain |
+| Retrieval prints the reason for each rank | a bare top-5 list | a ranking without reasons cannot be rejected on evidence |
+| Applicability is six questions | "check that it applies" | an unstated check is a skipped check |
+| Records are deprecated, never deleted | delete the outdated | the audit trail is the reason to trust the store at all |
+| One store, one schema | per-agent notes | two stores means two truths, one of them stale |
+| Experience ranks below the repository | experience as first-class evidence | a stale recipe applied confidently is the most expensive failure in the set |
+
+## Why the gate grew to eleven
+
+Ten tests checked the answer. The eleventh checks the *provenance* of the answer — whether prior work
+was retrieved and judged. That is a different question from "is this correct", and it is the one that
+silently disappears when a solution arrives pre-formatted.
+
+## What this design does not solve
+
+| Limit | Why it remains |
+|---|---|
+| Retrieval is lexical, not semantic | a synonym mismatch misses a good record; the store says so by returning nothing rather than guessing |
+| A record can be wrong and validated | only re-running its check catches that; the 180-day warning is a nudge, not a proof |
+| Nothing forces the agent to record | the gate checks reuse, not recording; recording is checked only when a record is created |
+| Cross-project experience is not merged | one store per project by design; merging requires a human decision about scope |
 
 ## Verification of the design
 

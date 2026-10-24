@@ -57,7 +57,7 @@ Add "expires_at" to the accounts endpoint and render it as an ISO date column.
 ## Next step
 php tools/lint.php && php backend/tests/run.php     # expected: 0 failures
 
-gate 10/10
+gate 11/11
 ```
 
 ## Example B — Windows service with a WinForms configurator
@@ -114,7 +114,7 @@ wire the button through the existing async handler wrapper.
 ## Next step
 dotnet test RdpAudit.sln -c Release --no-build -p:Platform=x64   # expected: all green
 
-gate 10/10
+gate 11/11
 ```
 
 ## Example C — documentation product
@@ -171,7 +171,7 @@ Eight canonical pages plus eight translations, ordered by a manifest; internal l
 ## Next step
 python <pack>/tools/ghagent.py wiki build && ... wiki verify     # expected: 0 errors
 
-gate 10/10
+gate 11/11
 ```
 
 ## What the three examples have in common

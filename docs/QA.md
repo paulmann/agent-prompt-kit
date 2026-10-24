@@ -1,6 +1,6 @@
 # QA checklist
 
-The ten tests of M8 turned into a review procedure for a human. Use it on an answer the agent
+The eleven tests of M8 turned into a review procedure for a human. Use it on an answer the agent
 produced, or on the prompt itself before publishing a change.
 
 ## Reviewing one answer
@@ -17,9 +17,22 @@ produced, or on the prompt itself before publishing a change.
 | 8 | Anything outside the declared scope? | extra refactoring, extra advice | nothing, or an explicit justified extension |
 | 9 | Does the answer have the five sections, in the user's language? | a wall of prose | Answer / Evidence / Assumptions / Open questions / Next step |
 | 10 | Is the unverified part stated as unverified? | confidence with no basis | "could not check X because Y" |
+| 11 | Did retrieval run, and is every reused record judged? | a solution applied without saying where it came from | a `Reused experience` entry with id, verdict and adaptation |
 
 The answer must end with the gate line. If it is missing, that is finding #10 by itself: the agent
 did not run its own gate.
+
+## Reviewing a reused solution
+
+A reused solution is the easiest place for a defect to enter unnoticed, because it arrives
+pre-formatted. Three questions, in order:
+
+1. **Was it retrieved before the plan, or afterwards as a justification?** The `Reused experience`
+   section appears before the plan, or the reuse is a rationalization.
+2. **Is the applicability verdict specific?** "Matches" without naming the environment facts that were
+   checked is not a verdict.
+3. **Is the adaptation named?** If the record was used unchanged in a different environment, the
+   adaptation is the thing that must be justified — or the reuse refused.
 
 ## Reviewing a change to the prompt
 
@@ -30,6 +43,7 @@ python tools/prompt_lint.py          # must exit 0
 | Check | Why |
 |---|---|
 | Module identifiers unchanged | they are an interface for reviews and tooling |
+| M13 stays whole: store, tool, skill, eleven gate rows | a half-implemented module reads as complete and is not |
 | `**Check:**` line present for every module | a module without a check cannot be verified |
 | Russian twin updated in the same commit | a stale translation is a documentation defect |
 | `version` bumped and changelog entry added | the linter compares them; a mismatch fails the build |

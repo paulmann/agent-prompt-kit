@@ -35,6 +35,21 @@ not observable. "The endpoint returns the field and the existing suite passes" i
 Add a `CHANGELOG.md` entry with the date. A specialized agent without a version cannot be audited; the
 next reader will not know which behaviour was tested.
 
+### 5. Seed the store with one recipe
+
+A domain with an empty store has nothing to retrieve on the first repeat. After the first successful
+task in the new domain, write one recipe from `skills/experience-reuse/templates/recipe.md` and check
+it:
+
+```bash
+python tools/experience.py add drafts/first-recipe.md
+python tools/experience.py search "the next task in your own words"
+```
+
+The second command is the real acceptance test: if retrieval does not surface the recipe for a query
+written the way a future requester would write it, the record's title and applicability are wrong, not
+the tool.
+
 ## What not to change
 
 | Invariant | Why it must survive |
@@ -43,6 +58,7 @@ next reader will not know which behaviour was tested.
 | M4 three labels | dropping one collapses the other two under pressure |
 | M6 safety rules | a domain never justifies a shortcut on secrets or irreversible actions |
 | M8 gate | without it, "done" is an opinion |
+| M13 sanitisation and applicability | a domain-specific store that skips the six questions turns reuse into blind copying |
 
 If a domain seems to require changing one of these, the honest answer is usually that the task is a
 different task — restate the Task Card.
@@ -55,6 +71,7 @@ different task — restate the Task Card.
 | Two cards disagree about "done" | acceptance was copied, not derived | write one acceptance line, delete the other |
 | The examples need different answer shapes | the output contract is too rigid for this domain | keep M7's five sections, change only their content |
 | Every task in the domain is "special" | the card is too broad | split the domain, one card each |
+| Retrieval always returns nothing | the records use the store's vocabulary, not the requester's | rewrite titles and applicability in the words a future request would use |
 
 ## Worked micro-example
 

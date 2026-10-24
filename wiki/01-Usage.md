@@ -34,7 +34,7 @@ python tools/prompt_lint.py --json   # machine-readable findings
 ## Next step
 <one action with its command>
 
-gate 10/10
+gate 11/11
 ```
 
 Three worked versions, in three unrelated domains, are in `examples/EXAMPLES.md`.

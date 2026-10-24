@@ -28,13 +28,30 @@ It is the answer to "did you build what was asked" that does not depend on the a
 | 7 | Context ingestion rules | M3 | priority order, ledger schema, six rules | verified by the lint's module check |
 | 8 | Tool-usage and safety rules | M6 | seven non-negotiable rules | verified by the lint's module check |
 | 9 | Output format requirements | M7 | five sections plus six rules | verified by the lint's module check |
-| 10 | Quality-assurance checklist | M8 plus `docs/QA.md` | ten tests, reported as one line; the same ten as a human checklist | verified: 10 tests in both places |
+| 10 | Quality-assurance checklist | M8 plus `docs/QA.md` | eleven tests, reported as one line; the same eleven as a human checklist | verified: 11 tests in both places |
 | 11 | Usage examples | `examples/EXAMPLES.md` | three domains: routine, ambiguous, failure | verified: 3 examples, 3 gate lines |
 | 12 | English canonical, Russian supplementary | every `.md` has a `.ru.md` twin | `tools/prompt_lint.py`, rule `pairs.missing-translation` | verified mechanically |
 | 13 | No invented context | M3 rule 1, M4 labels, M9 mode 2 | the lint cannot check truth, but the prompt forbids unsourced claims and the examples label every claim | prompt-enforced, human-reviewed |
 | 14 | Assumptions explicit | M4 `[assumption]`, M7 section, M12 question 3 | each assumption names its consequence | verified in the three examples |
-| 15 | Modular, testable instructions | 13 modules with stable ids and a `**Check:**` line each | `tools/prompt_lint.py`: module sequence, check-line count | verified mechanically |
+| 15 | Modular, testable instructions | 14 modules with stable ids and a `**Check:**` line each | `tools/prompt_lint.py`: module sequence, check-line count | verified mechanically |
 | 16 | Validate before publishing | this page, plus the lint run and the pack's audit before the push | `python tools/prompt_lint.py` exits 0 on the published tree | verified |
+
+## Second phase: reduce the work of a repeated task
+
+The follow-up request was to collect, inside the skill, the tools that reduce the model's work when a
+task has already been done. That is module M13, and it is judged by different criteria than the first
+sixteen rows — cost per repeat, not completeness of a document.
+
+| # | Requirement | Where it is satisfied | How it is checked | Status |
+|---:|---|---|---|---|
+| 17 | A repeated task costs one search, not a re-derivation | `tools/experience.py search`; M13 retrieval rule | trial on three real records: a matching query returns them ranked with a reason, an unrelated query returns none | verified |
+| 18 | Retrieval is not skipped under pressure | one command, no directory walk, no index to build | 1 command for retrieval vs. a directory walk; the skill states the asymmetry | verified by design |
+| 19 | Reuse cannot be a blind copy | six-question applicability check; M13 rule | the checklist exists in M13, in the skill, and in `docs/QA.md` as review question 2 | verified |
+| 20 | The store cannot rot silently | schema validation, secret scan, duplicate warning, 180-day staleness warning | `experience.py check`; `selftest` proves refusal on a token, a missing `Rollback`, a stale validation | verified: 13/13 self-tests |
+| 21 | Recording is not extra prose | fixed metadata header; four templates | a record is a copy-paste plus three decisions | verified by construction |
+| 22 | No sensitive value enters the store | M13 security rules; tool refusal; policy file | `selftest` case: a record with a token literal is refused; the scan also rejects absolute machine paths | verified |
+| 23 | The new module does not become a second source of truth | M3 priority 5.5, M3 rule 7, invariant 9 | experience ranks below the repository by rule, and the gate checks that reuse is named rather than assumed | verified by construction |
+| 24 | Both languages stay in step | every new file has a `.ru.md` twin; the linter enforces pairing and M13 markers per language | `python tools/prompt_lint.py` | verified mechanically |
 
 ## What is verified, and what is assumed
 
@@ -42,9 +59,9 @@ Being explicit here matters more than a clean table.
 
 **Verified by a command or an artefact**
 
-- module sequence `M0`…`M12` present, in order, once each;
-- 13 `**Check:**` lines, one per module;
-- 8 invariants, numbered;
+- module sequence `M0`…`M13` present, in order, once each;
+- 14 `**Check:**` lines, one per module;
+- 9 invariants, numbered;
 - every Markdown file has a Russian twin, and every twin has an English original;
 - no `{{placeholder}}` outside a code fence, no secret-shaped literal, no absolute machine path;
 - no dangling `M<number>` reference in any document;
@@ -57,7 +74,12 @@ Being explicit here matters more than a clean table.
 - that the cards *reduce* drift in a given model — the mechanism is plausible and the examples show
   it working, but it is not a controlled measurement;
 - that three examples are enough to teach the shape — chosen for cost, not measured for sufficiency;
-- that a fifteen-minute Domain Card is enough for a genuinely unfamiliar domain — it is a floor.
+- that a fifteen-minute Domain Card is enough for a genuinely unfamiliar domain — it is a floor;
+- **that a model follows the retrieval rule when the store is non-empty** — the cost argument is the
+  reason to expect it, and one command is the cheapest possible form, but no controlled comparison was
+  run;
+- **that lexical retrieval is enough in practice** — a synonym mismatch will miss a good record; the
+  measured behaviour is only that an unrelated query returns nothing rather than noise.
 
 These three are named as assumptions rather than presented as results. A validation page that claimed
 otherwise would be failure mode 11 from the prompt itself.
@@ -91,6 +113,8 @@ judgement — and stronger in another: it reads exactly what a consumer of the r
 ```bash
 python tools/prompt_lint.py                     # structural contracts, local tree
 python tools/prompt_lint.py --json | head -40   # the findings, machine-readable
+python tools/experience.py selftest             # 13 store checks, each on a fixture
+python tools/experience.py check                # the shipped store, if records exist
 python tools/external_check.py                  # the same contracts over the published bytes
 ```
 

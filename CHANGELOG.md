@@ -6,6 +6,29 @@ All notable changes to this project are documented here. The format is
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-24
+
+### Added
+
+- `M13 — Experience reuse`: before planning a non-trivial task, search a store of prior work; record it after verification. Experience is a hypothesis, never authority.
+- Four experience types — task record, recipe, artifact, failure record — with a fixed metadata header, so the store is queryable without reading every file.
+- A six-question applicability check, because blind copying of an old recipe is the cheapest way to reproduce an old bug.
+- `tools/experience.py` — the store and its one-command retrieval: `init`, `add`, `search`, `show`, `check`, `stats`, `deprecate`, `selftest`. Lexical ranking prints the reason for each position; `add` refuses a record with a token-shaped literal, an absolute machine path, or a recipe missing `Rollback`.
+- `skills/experience-reuse/` — the portable skill: workflow, retrieval rules, applicability checklist, four record templates, three sanitised examples, and a security/retention policy. Every file in English and Russian.
+- `memory/` — the store's home, with the rules for what belongs there and what never does.
+- The quality gate grew from ten tests to eleven: retrieval ran, every reused record has a verdict, nothing sensitive entered the store.
+- Four new failure modes (13–16): blind recipe copy, stale experience as truth, store as a dump, two stores.
+- `prompt_lint.py` now enforces the new contracts: M13 markers in both languages, eleven gate rows, the store, the tool and the skill sections.
+
+### Changed
+
+- `M3` — the Experience Store joins the source table at priority 5.5, with rule 7: experience never overrides the current repository, attached material or an explicit instruction.
+- `M5` — the loop gained a **Retrieve** step between Frame and Plan, and Record now decides whether a record is warranted.
+- `M6` — capabilities `memory-search` and `memory-write`, plus rule 8: experience writes are reviewable and never contain sensitive values.
+- `M7` — an optional `## Reused experience` section, and rule 7: reused work is named, with what was adapted.
+- `M10` — a domain may add record types, but not change the M13 invariants.
+- Nine invariants: prior experience is retrieved before planning, validated before reuse, sanitised before storage.
+
 ## [1.0.0] - 2026-10-24
 
 ### Added
@@ -26,5 +49,6 @@ All notable changes to this project are documented here. The format is
 
 - The kit ships without tokens, absolute machine paths or personal addresses; the linter fails the build if one appears, which is how the repository enforces on itself the rule the prompt states.
 
-[Unreleased]: https://github.com/paulmann/agent-prompt-kit/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/paulmann/agent-prompt-kit/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/paulmann/agent-prompt-kit/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/paulmann/agent-prompt-kit/releases/tag/v1.0.0

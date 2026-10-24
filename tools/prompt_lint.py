@@ -19,9 +19,14 @@ import sys
 from pathlib import Path
 
 EXIT_OK, EXIT_FAIL, EXIT_USAGE = 0, 1, 2
-MODULE_IDS = [f"M{n}" for n in range(0, 13)]
+MODULE_IDS = [f"M{n}" for n in range(0, 14)]
 REQUIRED_FRONT_MATTER = ("id", "version", "title", "language", "portable", "requires")
-INVARIANT_COUNT = 8
+INVARIANT_COUNT = 9
+GATE_ITEMS = 11
+EXPERIENCE_MARKERS = {
+    "PROMPT.md": ("## M13 — ", "Experience Store", "applicability", "last_verified_at"),
+    "PROMPT.ru.md": ("## M13 — ", "хранилище опыта", "применимост", "last_verified_at"),
+}
 SKIP_FILES = {"_Sidebar.md", "_Footer.md"}
 
 SECRET_PATTERNS = [
@@ -113,6 +118,38 @@ def check_modules(root: Path) -> None:
                 "the translation does not carry the same module identifiers: "
                 f"missing {sorted(set(en_modules) - set(ru_modules))}, "
                 f"extra {sorted(set(ru_modules) - set(en_modules))}", "PROMPT.ru.md")
+
+
+def check_experience_module(root: Path) -> None:
+    """M13 is the module whose absence is invisible: the prompt still reads as complete without it."""
+    for name in ("PROMPT.md", "PROMPT.ru.md"):
+        path = root / name
+        if not path.exists():
+            continue
+        text = read(path)
+        for marker in EXPERIENCE_MARKERS.get(name, ()):
+            if marker not in text:
+                add("error", "prompt.experience", f"M13 is incomplete: '{marker}' not found", name)
+        gate = re.search(r"## M8 .*?(?=\n## )", text, flags=re.DOTALL)
+        if gate:
+            rows = len(re.findall(r"^\| \d+ \| ", gate.group(0), flags=re.MULTILINE))
+            if rows != GATE_ITEMS:
+                add("error", "prompt.gate",
+                    f"the quality gate lists {rows} items, expected {GATE_ITEMS}", name)
+    tool = root / "tools" / "experience.py"
+    if not tool.exists():
+        add("error", "experience.tool", "tools/experience.py is absent; M13 promises a store and a command")
+        return
+    if not (root / "memory" / "README.md").exists():
+        add("error", "experience.store", "memory/README.md is absent; the store has no documented home")
+    skill = root / "skills" / "experience-reuse" / "SKILL.md"
+    if not skill.exists():
+        add("error", "experience.skill", "skills/experience-reuse/SKILL.md is absent")
+        return
+    body = read(skill)
+    for needle in ("## Applicability checklist", "## Record templates", "## Security and privacy"):
+        if needle not in body:
+            add("error", "experience.skill", f"the skill lacks '{needle}'", "skills/experience-reuse/SKILL.md")
 
 
 def check_pairs(root: Path) -> None:
@@ -244,6 +281,7 @@ def main(argv: list[str]) -> int:
 
     check_front_matter(root)
     check_modules(root)
+    check_experience_module(root)
     check_pairs(root)
     check_text(root)
     check_changelog(root)
