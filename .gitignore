@@ -1,3 +1,6 @@
+# RAGRAF local index: machine-local derivative data, never committed
+.ragraf/
+
 # work directories and reports
 .ghagent/
 lint.json

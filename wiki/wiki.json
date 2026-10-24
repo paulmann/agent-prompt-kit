@@ -1,32 +1,54 @@
 {
-  "_comment": "Order and navigation for this wiki. English pages are canonical; *.ru.md are translations published as <Page>.ru.",
+  "_comment": "Order and navigation for this wiki. English pages are canonical; *.ru.md are translations published as <Page>.ru. Home.md is listed in a titleless group on purpose: the sidebar links Home explicitly at the top, so a titled group would show it twice.",
   "repo": "paulmann/agent-prompt-kit",
   "branch": "main",
   "title": "agent-prompt-kit",
   "footer": "MIT",
   "groups": [
     {
+      "title": "",
+      "pages": [
+        "Home.md"
+      ]
+    },
+    {
       "title": "Start",
       "pages": [
-        "Home.md",
+        "00-Why.md",
         "01-Usage.md",
         "02-Modules.md",
         "03-Install.md"
       ]
     },
     {
+      "title": "Practice",
+      "pages": [
+        "04-Environment.md",
+        "05-Experience.md",
+        "06-Checklists.md"
+      ]
+    },
+    {
       "title": "Русский",
       "pages": [
         "Home.ru.md",
+        "00-Why.ru.md",
         "01-Usage.ru.md",
         "02-Modules.ru.md",
-        "03-Install.ru.md"
+        "03-Install.ru.md",
+        "04-Environment.ru.md",
+        "05-Experience.ru.md",
+        "06-Checklists.ru.md"
       ],
       "labels": {
         "Home.ru.md": "Home (RU)",
+        "00-Why.ru.md": "00 · Зачем",
         "01-Usage.ru.md": "01 · Использование",
-        "02-Modules.ru.md": "02 · Модули",
-        "03-Install.ru.md": "03 · Установка"
+        "02-Modules.ru.md": "02 · Карта модулей",
+        "03-Install.ru.md": "03 · Установка",
+        "04-Environment.ru.md": "04 · Окружение",
+        "05-Experience.ru.md": "05 · Хранилище опыта",
+        "06-Checklists.ru.md": "06 · Проверки"
       }
     }
   ]
