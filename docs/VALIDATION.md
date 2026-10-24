@@ -74,11 +74,14 @@ otherwise would be failure mode 11 from the prompt itself.
 ### Delegation attempt, and why it is recorded here
 
 The plan was to have the Saved Agent "GitHub Wiki Writer" perform the independent review. It was
-invoked twice with a narrow, web-only brief and both runs failed at execution
-(`subagent_execution_failed`), before producing any finding. That is recorded rather than hidden for
+invoked three times — twice with a narrow, web-only review brief, once with a one-line diagnostic
+(how many module headings does the file contain) — and all three runs failed at execution
+(`subagent_execution_failed`) before producing any finding. That is recorded rather than hidden for
 three reasons: the review still happened and had to be attributed correctly; a claim of agent review
 that did not occur would be failure mode 11 (authority theatre) from the prompt itself; and the next
 person should know the delegation route is currently broken for that agent rather than rediscover it.
+The failure is at the host's execution layer, not in the brief: the third attempt asked for a single
+sentence about one file and failed the same way.
 
 The substitute check is weaker in one respect — it verifies structure and published bytes, not
 judgement — and stronger in another: it reads exactly what a consumer of the repository reads.
