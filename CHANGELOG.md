@@ -6,6 +6,18 @@ All notable changes to this project are documented here. The format is
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-10-24
+
+### Added
+
+- `wiki.drift` — the linter now compares numbers restated on wiki pages with the prompt itself: an invariants count or a gate width that disagrees is an error. Verified on two fixtures (`Nine rules` against ten, `ten-item gate` against twelve), each producing exactly the expected finding.
+- The bilingual wiki is published: 10 pages plus `_Sidebar` and `_Footer` at <https://github.com/paulmann/agent-prompt-kit/wiki>, with navigation for both languages.
+
+### Fixed
+
+- `wiki/02-Modules.md` said "Nine rules never change" while the prompt had ten, and the Russian page claimed ten while listing nine: the delivery invariant was missing from both. Both now state ten and name it.
+- The wiki module table still described M10 as "point it at a new domain"; it now describes the session-to-environment procedure, and M8 names the twelve-item gate.
+
 ## [1.2.1] - 2026-10-24
 
 ### Fixed
@@ -84,7 +96,8 @@ All notable changes to this project are documented here. The format is
 
 - The kit ships without tokens, absolute machine paths or personal addresses; the linter fails the build if one appears, which is how the repository enforces on itself the rule the prompt states.
 
-[Unreleased]: https://github.com/paulmann/agent-prompt-kit/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/paulmann/agent-prompt-kit/compare/v1.2.2...HEAD
+[1.2.2]: https://github.com/paulmann/agent-prompt-kit/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/paulmann/agent-prompt-kit/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/paulmann/agent-prompt-kit/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/paulmann/agent-prompt-kit/compare/v1.0.0...v1.1.0

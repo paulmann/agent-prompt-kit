@@ -13,9 +13,9 @@ difference between an instruction and a wish.
 | M5 | How do I work without breaking things? | loop with verification |
 | M6 | What may I use? | capability table |
 | M7 | What shape does the answer have? | five sections |
-| M8 | How do I know it is finished? | gate line |
+| M8 | How do I know it is finished? | twelve-item gate, reported as one line |
 | M9 | How is this prompt defeated? | named failure modes |
-| M10 | How do I point it at a new domain? | one card, one example, one acceptance line |
+| M10 | How do I go from a finished session to a specialist environment? | a registered workspace or agent: cards, environment, registration, handoff |
 | M11 | What does a good answer look like? | three examples |
 | M12 | What do I check before sending? | five answered questions |
 | M13 | How do I avoid redoing work already done? | retrieval, applicability verdict, clean store |
@@ -29,8 +29,9 @@ validated by the schema, with secrets and machine paths refused. Records are dep
 
 ## Invariants
 
-Nine rules never change, in any domain: declared subject, sourced or labelled claims, sandboxed
+Ten rules never change, in any domain: declared subject, sourced or labelled claims, sandboxed
 irreversible actions, no displayed secrets, no green check over nothing, stated unverified parts,
-the user's language, a reported gate, and experience as a hypothesis rather than authority.
+the user's language, a reported gate, experience as a hypothesis rather than authority, and delivery —
+a reusable result counts only when the runtime has registered it or the exact step is named.
 
 Full text: `PROMPT.md`.

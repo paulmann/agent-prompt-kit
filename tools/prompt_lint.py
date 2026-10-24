@@ -208,6 +208,53 @@ def check_language_direction(root: Path) -> None:
                 relative)
 
 
+def check_wiki_counts(root: Path) -> None:
+    """Wiki pages restate numbers from the prompt, so they drift silently. Compare them.
+
+    Measured drift: the English wiki said "Nine rules" while the prompt had ten, and the Russian page
+    claimed ten while listing nine. Nothing else in the kit compares a page against M8 or the
+    invariants section.
+    """
+    prompt = root / "PROMPT.md"
+    wiki = root / "wiki"
+    if not prompt.exists() or not wiki.is_dir():
+        return
+    text = read(prompt)
+    gate = re.search(r"## M8 .*?(?=\n## )", text, flags=re.DOTALL)
+    gate_rows = len(re.findall(r"^\| \d+ \| ", gate.group(0), flags=re.MULTILINE)) if gate else 0
+    invariants = (len(re.findall(r"^\d+\. ", text.split("## Invariants", 1)[1], flags=re.MULTILINE))
+                  if "## Invariants" in text else 0)
+
+    numbers = {9: ("nine", "девять"), 10: ("ten", "десять"), 11: ("eleven", "одиннадцать"),
+               12: ("twelve", "двенадцать"), 13: ("thirteen", "тринадцать")}
+    by_word = {word: number for number, pair in numbers.items() for word in pair}
+
+    patterns = (
+        # "Nine rules never change" / "Ten rules never change"
+        (re.compile(r"\b(nine|ten|eleven|twelve|thirteen|девять|десять|одиннадцать|двенадцать|тринадцать)"
+                    r"\s+(?:rules never change|правил(?:а)? не меня(?:ются|ется))", re.IGNORECASE),
+         "invariants", invariants),
+        # "twelve-item gate" / "ворота из двенадцати проверок"
+        (re.compile(r"\b(nine|ten|eleven|twelve|thirteen)-item gate", re.IGNORECASE), "gate", gate_rows),
+        (re.compile(r"ворот[аы]?\s+из\s+(девяти|десяти|одиннадцати|двенадцати|тринадцати)\s+провер", re.IGNORECASE),
+         "gate", gate_rows),
+    )
+
+    for path in sorted(wiki.glob("*.md")):
+        if path.name in SKIP_FILES:
+            continue
+        body = read(path)
+        relative = path.relative_to(root).as_posix()
+        for pattern, kind, actual in patterns:
+            for match in pattern.finditer(body):
+                word = match.group(1).lower()
+                stated = by_word.get(word)
+                if stated is None or actual == 0 or stated == actual:
+                    continue
+                add("error", "wiki.drift",
+                    f"the page states {stated} {kind}, PROMPT.md has {actual}", relative)
+
+
 def check_text(root: Path) -> None:
     for path in sorted(root.rglob("*.md")):
         if ".git" in path.parts:
@@ -323,6 +370,7 @@ def main(argv: list[str]) -> int:
     check_experience_module(root)
     check_pairs(root)
     check_language_direction(root)
+    check_wiki_counts(root)
     check_text(root)
     check_changelog(root)
     check_cross_references(root)

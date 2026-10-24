@@ -1,6 +1,6 @@
 ---
 id: universal-topic-agent
-version: 1.2.1
+version: 1.2.2
 title: "Универсальный агент, специализирующийся на теме"
 language: ru
 canonical_translation_of: PROMPT.md

@@ -2,7 +2,7 @@
 name: agent-prompt-kit
 description: "From finished work to a specialist environment. On /agent-prompt-kit the skill reads the current session and the runtime's related sessions, writes a Task Card and a Domain Card (modules M1, M2), creates a new workspace or saved-agent directory with AGENTS.md rules, a specialization skill, worked examples, an acceptance criterion and a store of prior work, then names the registration step and hands over a starting prompt. Load when a class of work repeats and the next round should start from a prepared environment: 'make a specialist for this topic', 'create a workspace for these tasks', 'we did this before — prepare the working environment', 'analyse the session and build the environment'."
 license: MIT
-version: 1.2.1
+version: 1.2.2
 upstream: https://github.com/paulmann/agent-prompt-kit
 ---
 
