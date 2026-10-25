@@ -94,7 +94,7 @@
 |---|---:|---|
 | Модулей в промпте | 14 | `PROMPT.md`, заголовки `M0`…`M13` |
 | Строк самопроверки | 14 | `grep -c '^\*\*Check:\*\*' PROMPT.md` |
-| Инвариантов | 10 | `PROMPT.md`, раздел "Invariants" |
+| Инвариантов | 10 | `PROMPT.md`, раздел «Invariants» |
 | Проверок ворот качества | 12 | `PROMPT.md`, раздел M8 |
 | Различных идентификаторов правил в линтере | 27 | `grep -o 'add("[a-z]*", "[a-z.-]*"' tools/prompt_lint.py \| sort -u` |
 | Самопроверок хранилища опыта | 13 | `python tools/experience.py selftest` |
