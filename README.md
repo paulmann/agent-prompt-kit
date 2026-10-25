@@ -1,5 +1,8 @@
 # agent-prompt-kit
 
+<!-- md-i18n:switcher -->
+**Read this in:** English · [Deutsch](README.de.md) · [中文](README.zh.md) · [हिन्दी](README.hi.md) · [Español](README.es.md) · [Русский](README.ru.md)
+
 **Turn work you have already done into a specialist environment for the work coming next. One command reads the current session and the runtime's related sessions, writes a Task Card and a Domain Card, and creates a workspace or saved agent that already holds the rules, the acceptance criterion, worked examples and a store of prior work. Fourteen modules, machine-checked.**
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
