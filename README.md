@@ -230,6 +230,10 @@ English files are canonical; Russian translations carry the `.ru.md` suffix — 
 GitHub itself uses. Both are kept in sync by `tools/prompt_lint.py`, which fails the build when a
 document has no twin.
 
+A language variant such as `README.de.md` is a translation of the canonical English document: the
+pair it belongs to is `README.md` ↔ `README.ru.md`, so it needs no Russian twin of its own and
+`tools/prompt_lint.py` only asks it to resolve to its original.
+
 | English | Russian |
 |---|---|
 | [README.md](README.md) | [README.ru.md](README.ru.md) |

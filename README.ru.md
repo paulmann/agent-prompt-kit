@@ -231,6 +231,10 @@ query: add nullable column to list endpoint  ·  2 candidate(s)
 пользуется сам GitHub. Оба набора держит в синхроне `tools/prompt_lint.py`: он роняет сборку, когда
 у документа нет пары.
 
+Файл-вариант вроде `README.de.md` — перевод основного английского документа: он входит в пару
+`README.md` ↔ `README.ru.md`, собственной русской пары не требует, и `tools/prompt_lint.py` лишь
+проверяет, что он находит свой оригинал.
+
 | Английский | Русский |
 |---|---|
 | [README.md](README.md) | [README.ru.md](README.ru.md) |

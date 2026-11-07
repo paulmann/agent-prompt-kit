@@ -30,7 +30,7 @@ It is the answer to "did you build what was asked" that does not depend on the a
 | 9 | Output format requirements | M7 | five sections plus six rules | verified by the lint's module check |
 | 10 | Quality-assurance checklist | M8 plus `docs/QA.md` | twelve tests, reported as one line; the same twelve as a human checklist | verified: 12 tests in both places |
 | 11 | Usage examples | `examples/EXAMPLES.md` | three domains: routine, ambiguous, failure | verified: 3 examples, 3 gate lines |
-| 12 | English canonical, Russian supplementary | every `.md` has a `.ru.md` twin | `tools/prompt_lint.py`, rule `pairs.missing-translation` | verified mechanically |
+| 12 | English canonical, Russian supplementary | every canonical `.md` has a `.ru.md` twin; a language variant (`README.<lang>.md`) is a translation of its original and pairs with `README.md`, not with a Russian twin of its own | `tools/prompt_lint.py`, rules `pairs.missing-translation` / `pairs.orphan-translation` | verified mechanically |
 | 13 | No invented context | M3 rule 1, M4 labels, M9 mode 2 | the lint cannot check truth, but the prompt forbids unsourced claims and the examples label every claim | prompt-enforced, human-reviewed |
 | 14 | Assumptions explicit | M4 `[assumption]`, M7 section, M12 question 3 | each assumption names its consequence | verified in the three examples |
 | 15 | Modular, testable instructions | 14 modules with stable ids and a `**Check:**` line each | `tools/prompt_lint.py`: module sequence, check-line count | verified mechanically |
@@ -51,7 +51,7 @@ sixteen rows — cost per repeat, not completeness of a document.
 | 21 | Recording is not extra prose | fixed metadata header; four templates | a record is a copy-paste plus three decisions | verified by construction |
 | 22 | No sensitive value enters the store | M13 security rules; tool refusal; policy file | `selftest` case: a record with a token literal is refused; the scan also rejects absolute machine paths | verified |
 | 23 | The new module does not become a second source of truth | M3 priority 5.5, M3 rule 7, invariant 9 | experience ranks below the repository by rule, and the gate checks that reuse is named rather than assumed | verified by construction |
-| 24 | Both languages stay in step | every new file has a `.ru.md` twin; the linter enforces pairing and M13 markers per language | `python tools/prompt_lint.py` | verified mechanically |
+| 24 | Both languages stay in step | every new canonical file has a `.ru.md` twin; a language variant resolves to its original; the linter enforces pairing and M13 markers per language | `python tools/prompt_lint.py` | verified mechanically |
 
 ## Third phase: from a session to a specialist environment
 
@@ -79,7 +79,8 @@ Being explicit here matters more than a clean table.
 - module sequence `M0`…`M13` present, in order, once each;
 - 14 `**Check:**` lines, one per module;
 - 10 invariants, numbered;
-- every Markdown file has a Russian twin, and every twin has an English original;
+- every canonical Markdown file has a Russian twin, every twin has an English original, and a
+  `name.<lang>.md` variant resolves to its `name.md` original;
 - no `{{placeholder}}` outside a code fence, no secret-shaped literal, no absolute machine path;
 - no dangling `M<number>` reference in any document;
 - no broken relative link;

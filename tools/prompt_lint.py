@@ -155,6 +155,21 @@ def check_experience_module(root: Path) -> None:
             add("error", "experience.skill", f"the skill lacks '{needle}'", "skills/experience-reuse/SKILL.md")
 
 
+def language_variant(path: Path) -> tuple[str, str] | None:
+    """A `name.<lang>.md` file is a translation of `name.md`, not a document of its own.
+
+    The six-language README set added documents whose language is not English: `README.de.md` and
+    its siblings translate the canonical `README.md`, and the Russian variant of that same document
+    is `README.ru.md`. Counting them as canonical would demand `README.de.ru.md`, a Russian
+    translation of a German file, and would add one file per language pair. The pair rule therefore
+    applies to documents; a variant only has to resolve to its original.
+    """
+    match = re.match(r"^(?P<base>.+)\.(?P<lang>[a-z]{2})$", path.stem)
+    if not match or match.group("lang") == "ru":
+        return None
+    return match.group("base"), match.group("lang")
+
+
 def check_pairs(root: Path) -> None:
     markdown = [p for p in root.rglob("*.md")
                 if ".git" not in p.parts and p.name not in SKIP_FILES]
@@ -165,6 +180,13 @@ def check_pairs(root: Path) -> None:
             if not twin.exists():
                 add("error", "pairs.orphan-translation",
                     f"{relative} has no English original", relative)
+            continue
+        variant = language_variant(path)
+        if variant is not None:
+            original = path.with_name(variant[0] + ".md")
+            if not original.exists():
+                add("error", "pairs.orphan-translation",
+                    f"{relative} has no original document ({original.name})", relative)
             continue
         twin = path.with_name(path.stem + ".ru.md")
         if not twin.exists():

@@ -6,6 +6,10 @@ All notable changes to this project are documented here. The format is
 
 ## [Unreleased]
 
+### Fixed
+
+- The pairing rule demanded a Russian twin for every file that does not end in `.ru.md`, so the six-language README set failed the lint on four findings (`README.de.md`, `.es`, `.hi`, `.zh`). A `README.<lang>.md` file is a translation of its original, not a separate document: a language variant now has to resolve to `README.md`, while the canonical document keeps its `README.ru.md` twin. `docs/VALIDATION.md`, `README.md` and their Russian translations state the rule precisely. Verified: the lint exits 0 on this tree; on fixtures, a canonical file without its `.ru.md` twin and a variant without its original still each produce the expected error.
+
 ## [1.2.2] - 2026-10-24
 
 ### Added

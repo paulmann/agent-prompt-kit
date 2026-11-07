@@ -179,15 +179,37 @@ listing = json.loads(urllib.request.urlopen(urllib.request.Request(
     "https://api.github.com/repos/paulmann/agent-prompt-kit/git/trees/main?recursive=1",
     headers={"User-Agent": "external-check"}), timeout=30).read().decode("utf-8"))
 paths = [item["path"] for item in listing["tree"] if item["type"] == "blob" and item["path"].endswith(".md")]
+
+
+def language_variant(path):
+    """Return the original of a `name.<lang>.md` variant, or None for a canonical document.
+
+    README.de.md and its siblings are translations of README.md; the Russian variant of that same
+    document is README.ru.md. A variant therefore pairs with its original, not with a Russian twin
+    of its own — the tree would otherwise grow one file per language pair.
+    """
+    stem = path[:-3]
+    base, dot, lang = stem.rpartition(".")
+    if not dot or len(lang) != 2 or lang != lang.lower() or not lang.isalpha() or lang == "ru":
+        return None
+    return base + ".md"
+
+
 for path in paths:
     if path.rsplit(".", 2)[-2] == "ru":
         twin = path.replace(".ru.md", ".md")
         if twin not in paths:
             add("pairs.orphan", path, "translation without an original", "add the English file")
-    else:
-        twin = path[:-3] + ".ru.md"
-        if twin not in paths:
-            add("pairs.missing", path, "no Russian translation", f"add {twin}")
+        continue
+    original = language_variant(path)
+    if original is not None:
+        if original not in paths:
+            add("pairs.orphan", path, f"language variant without its original ({original})",
+                f"add {original}")
+        continue
+    twin = path[:-3] + ".ru.md"
+    if twin not in paths:
+        add("pairs.missing", path, "no Russian translation", f"add {twin}")
 
 
 # 5b. language direction: a .ru.md must be Russian, its canonical twin must be English
